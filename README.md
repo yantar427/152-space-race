@@ -14,8 +14,8 @@ Hat einer der Spieler alle Leben verloren, ist das Spiel beendet. Der Spieler mi
 
 Es gibt drei verschiedene Schwierigkeitsgrade:
 
-    1. Leicht: Die Hindernisse bewegen sich nur in eine Richtung.
-    2. Mittel: Zwei Sets von Hindernissen (damit auch mehr Hindernisse), wovon sich ein Set von rechts nach links bewegt und das zweite in die andere Richtung.
-    3. Schwierig: Zwei Sets von Hindernissen wie bei Schwierigkeitsgrad Mittel, zusätzlich erhöht sich die Geschwindigkeit im Intervall von 20 Sekunden
+- Leicht: Die Hindernisse bewegen sich nur in eine Richtung.
+- Mittel: Zwei Sets von Hindernissen (damit auch mehr Hindernisse), wovon sich ein Set von rechts nach links bewegt und das zweite in die andere Richtung.
+- Schwierig: Zwei Sets von Hindernissen wie bei Schwierigkeitsgrad Mittel, zusätzlich erhöht sich die Geschwindigkeit im Intervall von 20 Sekunden
 
 Den Schwierigkeitsgrad wählt man vor Beginn des Spiels.
