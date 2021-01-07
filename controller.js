@@ -275,7 +275,22 @@ function drawGameObjects(ctx, playerRed, playerBlue, livesPlayerRedText, livesPl
     heartPlayerBlue.draw(ctx);
     scorePlayerRedText.draw(ctx);
     scorePlayerBlueText.draw(ctx);
+    drawDivider(ctx);
 
+}
+
+/**
+ * Funktion, die kleine Abtrennung zwischen den Spielern zeichnet
+ * @param ctx   // Canvas-Context zum Zeichnen
+ */
+function drawDivider(ctx){
+    ctx.strokeStyle = '#bbb';
+    ctx.lineWidth = '2';
+    ctx.beginPath();
+    ctx.moveTo(300, 500);
+    ctx.lineTo(300, 400);
+    ctx.closePath();
+    ctx.stroke();
 }
 
 /**
