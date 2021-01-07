@@ -1,5 +1,11 @@
+/*
+Modul 152, LB - Space Race
+08.01.2021, Alessia Siegrist und Tanja Wyder
+*/
+
 // Konstanten für die Angabe zur aktuellen Seite
 const pageOne = 1;
+const pageTwo = 2;
 const pageThree = 3;
 
 // Initialisierung für die Angabe zum Level
@@ -7,6 +13,27 @@ var difficultyLevel = 0;
 
 // Ausführen der Startfunktion auf das fertige Laden der Seite
 window.onload = function() { startNewGame(); }
+
+
+function showFrame(canvas, ctx, playerRed, playerBlue, gameOver) {
+    // if(gameOver){
+    //     return;
+    // }
+
+    // Check and update position of players
+    playerRed.updatePosition();
+    playerBlue.updatePosition();
+    // Clear canvas
+	ctx.clearRect(0, 0, canvas.width, canvas.height);
+    playerRed.draw(ctx);
+    playerBlue.draw(ctx);
+
+    // Next animation step
+    window.requestAnimationFrame(function(actualTime){
+        showFrame(canvas, ctx, playerRed, playerBlue);
+    })
+}
+
 
 /**
  * Funktion um den Startbildschirm anzuzeigen
@@ -133,8 +160,26 @@ function setDifficulty(e, easyButton, mediumButton, difficultButton, startButton
     }
 }
 
-function startGame(difficultyLevel) {
-    // TODO
+function startGame(difficultyLevel, ctx, canvas) {
+
+    window.requestAnimationFrame(function(actualTime){
+
+        changeStyle(pageTwo, canvas);
+
+        let startTime = actualTime;
+
+        let playerRed = new myPlayer(150, 450, '#f00', 'Player Red');
+        let playerBlue = new myPlayer(430, 450, '#00f', 'Player Blue');
+        playerRed.draw(ctx);
+        playerBlue.draw(ctx);
+
+        window.addEventListener('keydown', function(){keyDown(event, playerRed, playerBlue)});
+        window.addEventListener('keyup', function(){keyUp(event, playerRed, playerBlue)});
+
+        showFrame(canvas, ctx, playerRed, playerBlue);
+
+    });
+
 }
 
 /**
@@ -184,3 +229,47 @@ function drawGameOverPage(ctx, winner, loser) {
         startNewGame();
     }
  }
+
+
+ function keyDown(event, playerRed, playerBlue) {
+    // Key functions for Player Red (left side)
+    if (event.keyCode == 87) {
+        // keycode is 'w'
+        playerRed.isUp = true;
+        playerRed.isDown = false;
+    } else if (event.keyCode == 83) {
+        // keycode is 's'
+        playerRed.isDown = true;
+        playerRed.isUp = false;
+    }
+    // Key functions for Player Blue (right side)
+    if (event.keyCode == 38) {
+        // Keycode is 'arrow up'
+        playerBlue.isUp = true;
+        playerBlue.isDown = false;
+    } else if (event.keyCode == 40) {
+        // Keycode is 'arrow down'
+        playerBlue.isDown = true;
+        playerBlue.isUp = false;
+    }
+     
+}
+
+function keyUp(event, playerRed, playerBlue) {
+    // Keys released for PlayerRed (left side)
+    if (event.keyCode == 87) {
+        // keyCode for 'w'
+        playerRed.isUp = false;
+    } else if (event.keyCode == 83) {
+        // keyCode for 's'
+        playerRed.isDown = false;
+    }
+    // Keys released for PlayerBlue (right side)
+    if (event.keyCode == 38) {
+        // keyCode for 'arrow up'
+        playerBlue.isUp = false;
+    } else if (event.keyCode == 40) {
+        // keyCode for 'arrow down'
+        playerBlue.isDown = false;
+    }
+}
