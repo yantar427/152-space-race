@@ -14,29 +14,38 @@ var difficultyLevel = 0;
 // Ausführen der Startfunktion auf das fertige Laden der Seite
 window.onload = function() { startNewGame(); }
 
-
+/**
+ * 
+ * @param canvas        //  Canvas-Objekt zum Zeichnen
+ * @param ctx           //  Canvas-Context zum Zeichnen
+ * @param playerRed     //  Player-Objekt für Player Red
+ * @param playerBlue    //  Player-Objekt für Player Blue
+ * @param gameOver      //  Spielstatus
+ */
 function showFrame(canvas, ctx, playerRed, playerBlue, gameOver) {
     // if(gameOver){
     //     return;
     // }
 
-    // Check and update position of players
+    // Positionen der Player prüfen und aktualisieren
     playerRed.updatePosition();
     playerBlue.updatePosition();
-    // Clear canvas
-	ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Canvas löschen
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    // Player-Objekte neu zeichnen
     playerRed.draw(ctx);
     playerBlue.draw(ctx);
 
-    // Next animation step
+    // Nächster Schritt der Animation
     window.requestAnimationFrame(function(actualTime){
         showFrame(canvas, ctx, playerRed, playerBlue);
     })
 }
 
-
 /**
- * Funktion um den Startbildschirm anzuzeigen
+ * Funktion, um den Startbildschirm anzuzeigen
  */
 function startNewGame() {
     console.log("halloooo");
@@ -45,7 +54,7 @@ function startNewGame() {
     var canvas = document.getElementById("space-race");
     var ctx = canvas.getContext("2d");
 
-    // Style anhand der nummerischen Seitenangabe zu wechseln
+    // Style anhand der numerischen Seitenangabe wechseln
     changeStyle(pageOne, canvas);
     var buttons = drawGameStartPage(ctx);
 
@@ -56,8 +65,8 @@ function startNewGame() {
 }
 
 /**
- * Funktion um den Style des Canvas festzulegen
- *  @param page     // Numerische Angabe von welche Seite her die Funktion aufgerufen wird
+ * Funktion, um den Style des Canvas festzulegen
+ *  @param page     // Numerische Angabe, von welche Seite her die Funktion aufgerufen wird
  *  @param canvas   // Canvas Objekt um den Style anzupassen
  */
 function changeStyle(page, canvas) {
@@ -110,7 +119,7 @@ function drawGameStartPage(ctx) {
 }
 
 /**
- * Funktion zu setzten des Schwirigkeitsgrads und für das starten des Spiels solange ein 
+ * Funktion zum Setzen des Schwirigkeitsgrads und für das Starten des Spiels, sofern ein 
  * Schwierigkeitsgrad gesetzt ist
  * @param e                 // Event um die Mausposition zu erhalten 
  * @param easyButton        // Buttonobjekt für die Schwierigkeitsstuffe "Leicht"  
@@ -121,7 +130,7 @@ function drawGameStartPage(ctx) {
  * @param canvas            // Canvas Objekt zur Weitergabe
  */
 function setDifficulty(e, easyButton, mediumButton, difficultButton, startButton, ctx, canvas) {
-    // Konstatendeklaration für die Schwierigkeitsstuffe
+    // Konstatendeklaration für die Schwierigkeitsstufen
     const easy = 1;
     const medium = 2;
     const difficult = 3;
@@ -135,27 +144,27 @@ function setDifficulty(e, easyButton, mediumButton, difficultButton, startButton
     // Check ob Maus auf einem Button liegt oder nicht
     if (mouseX > easyButton.x && mouseX < easyButton.x + easyButton.width && 
         mouseY > easyButton.y && mouseY < easyButton.y + easyButton.height) {
-        // Schwierigkeitsstuffe setzten
+        // Schwierigkeitsstufe setzen
         difficultyLevel = easy;
     } else if (mouseX > mediumButton.x && mouseX < mediumButton.x + mediumButton.width && 
                mouseY > mediumButton.y && mouseY < mediumButton.y + mediumButton.height) {
-        // Schwierigkeitsstuffe setzten
+        // Schwierigkeitsstufe setzen
         difficultyLevel = medium;
     } else if (mouseX > difficultButton.x && mouseX < difficultButton.x + difficultButton.width && 
                mouseY > difficultButton.y && mouseY < difficultButton.y + difficultButton.height) {
-        // Schwierigkeitsstuffe setzten
+        // Schwierigkeitsstufe setzen
         difficultyLevel = difficult;
     } else if (mouseX > startButton.x && mouseX < startButton.x + startButton.width && 
                mouseY > startButton.y && mouseY < startButton.y + startButton.height) {
-            // Check ob eine Schwierigkeitsstuffe gesetzt ist
-            // Wenn keine gesetzt wurde Warnung ausgeben, sonst Spiel starten
+            // Check ob eine Schwierigkeitsstufe gesetzt ist
+            // Wenn keine gesetzt wurde, Warnung ausgeben, sonst Spiel starten
             if (difficultyLevel==none) {
                 alert("Bitte wählen Sie einen Schwierigkeitsgrad!")
             } else {
                 startGame(difficultyLevel, ctx, canvas);
             }
     } else {
-        // Schwierigkeitsstuffe setzten
+        // Schwierigkeitsstufe setzen
         difficultyLevel = none;
     }
 }
@@ -183,10 +192,10 @@ function startGame(difficultyLevel, ctx, canvas) {
 }
 
 /**
- * Alle Texte und den Button (Rechtecke) für die Game Over Seite erstellen und zeichnen
+ * Alle Texte und den Button (Rechteck) für die Game-Over-Seite erstellen und zeichnen
  * @param ctx       // Canvas Context für das Zeichnen der Texte und des Buttons (Rechteck) 
- * @param winner    // Spieler Objekt welcher gewonnen hat für die Score anzeige
- * @param loser     // Spieler Objekt welcher verlohren hat für die Score anzeige
+ * @param winner    // Spieler-Objekt des Gewinners für die Score anzeigen
+ * @param loser     // Spieler-Objekt des Verlierers für die Score anzeigen
  */
 function drawGameOverPage(ctx, winner, loser) {
     var gameOverText = new myText("Game Over", "50px Raleway", 160, 100);
@@ -207,13 +216,13 @@ function drawGameOverPage(ctx, winner, loser) {
     var newGameText = new myText("Neues Spiel", "28px Raleway", 218, 390);
     newGameText.draw(ctx);
 
-    // Rückgabe des Buttons um ein neues Spiel zu starten
+    // Rückgabe des Buttons, um ein neues Spiel zu starten
     return newGameButton;
  }
 
  /**
-  * Funktion um ein neues Spiel zu starten, solange die Maus auf dem Button (Rechteck) 
-  * lag während der Event ausgelöst wurde
+  * Funktion, um ein neues Spiel zu starten, solange die Maus auf dem Button (Rechteck) 
+  * lag, während der Event ausgelöst wurde
   * @param e        // Event um die Position der Maus zu erhalten 
   * @param button   // Buttonobjekt um ein neues Spiel zu starten 
   */
@@ -225,51 +234,62 @@ function drawGameOverPage(ctx, winner, loser) {
 
     if (mouseX > button.x && mouseX < button.x + button.width && 
         mouseY > button.y && mouseY < button.y + button.height) {
-        // Neuses Spiel startne
+        // Neues Spiel starten
         startNewGame();
     }
  }
 
-
+/**
+ * Funktion zur Bewegung der Spielfiguren per Tastendruck
+ * @param event         // Event Tastendruck
+ * @param playerRed     // Spieler-Objekt von Player Red
+ * @param playerBlue    // Spieler-Objekt von Player Blue
+ */
  function keyDown(event, playerRed, playerBlue) {
-    // Key functions for Player Red (left side)
+    // Bewegung der Figur von Player Red (links)
     if (event.keyCode == 87) {
-        // keycode is 'w'
+        // Taste 'w' für Aufwärtsbewegung
         playerRed.isUp = true;
         playerRed.isDown = false;
     } else if (event.keyCode == 83) {
-        // keycode is 's'
+        // Taste 's' für Abwärtsbewegung
         playerRed.isDown = true;
         playerRed.isUp = false;
     }
-    // Key functions for Player Blue (right side)
+    // Bewegung der Figur von Player Blue (rechts)
     if (event.keyCode == 38) {
-        // Keycode is 'arrow up'
+        // Taste 'Pfeil nach oben'für Aufwärtsbewegung
         playerBlue.isUp = true;
         playerBlue.isDown = false;
     } else if (event.keyCode == 40) {
-        // Keycode is 'arrow down'
+        // Taste 'Pfeil nach unten'für Abwärtsbewegung
         playerBlue.isDown = true;
         playerBlue.isUp = false;
     }
      
 }
 
+/**
+ * Funktion, um Bewegung der Spielfiguren zu stoppen
+ * @param event         // Event Tastenfreigabe
+ * @param playerRed     // Spieler-Objekt von Player Red
+ * @param playerBlue    // Spieler-Objekt von Plsyer Blue
+ */
 function keyUp(event, playerRed, playerBlue) {
-    // Keys released for PlayerRed (left side)
+    // Bewegung der Figur von Player Red stoppen
     if (event.keyCode == 87) {
-        // keyCode for 'w'
+        // Taste 'w' freigegeben
         playerRed.isUp = false;
     } else if (event.keyCode == 83) {
-        // keyCode for 's'
+        // Taste 's' freigegeben
         playerRed.isDown = false;
     }
-    // Keys released for PlayerBlue (right side)
+    // Bewegung der Figur von Player Blue stoppen
     if (event.keyCode == 38) {
-        // keyCode for 'arrow up'
+        // Taste 'Pfeil nach oben' freigegeben
         playerBlue.isUp = false;
     } else if (event.keyCode == 40) {
-        // keyCode for 'arrow down'
+        // Taste 'Pfeil nach unten' freigegeben
         playerBlue.isDown = false;
     }
 }

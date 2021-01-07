@@ -1,5 +1,10 @@
+/*
+Modul 152, LB - Space Race
+08.01.2021, Alessia Siegrist und Tanja Wyder
+*/
+
 /**
- * Klasse zum erstellen von Canvas Texten
+ * Klasse zum Erstellen von Canvas-Texten
  */
 class myText {
     // Konstruktor
@@ -12,7 +17,7 @@ class myText {
 
     /**
      * Zeichnen des Textes
-     * @param ctx   // Canvas Context zum zeichnen 
+     * @param ctx   // Canvas Context zum Zeichnen 
      */
     draw(ctx) {
         ctx.font = this.font;
@@ -21,7 +26,7 @@ class myText {
 }
 
 /**
- * Klasse zum erstellen von Canvas Buttons (Rechtecke)
+ * Klasse zum Erstellen von Canvas Buttons (Rechtecke)
  */
 class myButton {
     // Konstruktor
@@ -36,7 +41,7 @@ class myButton {
 
     /**
      * Zeichnen des Buttons (Rechteck)
-     * @param ctx   // Canvas Context zum zeichnen 
+     * @param ctx   // Canvas Context zum Zeichnen 
      */
     draw(ctx) {
         ctx.beginPath();
@@ -47,7 +52,11 @@ class myButton {
     }
 }
 
+/**
+ * Klasse zum Erstellen der Player-Figuren
+ */
 class myPlayer {
+    // Konstruktor
     constructor(x, y, color, name) {
         this.x = x;
         this.y = y;
@@ -60,7 +69,10 @@ class myPlayer {
         this.isDown = false;
     }
     
-    // Draw rectangle
+    /**
+     * Zeichnen der Player-Figuren
+     * @param ctx   // Canvas-Context zum Zeichnen
+     */
     draw(ctx){
         ctx.beginPath();
         ctx.rect(this.x, this.y, this.width, this.height);
@@ -68,33 +80,30 @@ class myPlayer {
         ctx.fill();
     }
 
-    // Start position after life is lost or point is scored
+    /**
+     * Startposition nach Kollision oder Punktgewinn
+     */
     startPosition(){
         this.y = 450;
         this.isUp = false;
         this.isDown = false;
     }
 
-    // Update position
+    /**
+     * Neue Position setzen
+    */
     updatePosition() {
+        // Bewegung nach oben
         if(this.isUp && this.y > 0) {
-            this.moveUp();
+            this.y--;
+        // Bewegung nach unten
         }else if(this.isDown && this.y < 450){
-            this.moveDown();
+            this.y++;
         }
+        // Oberer Spielrand wird erreicht
         if(this.y == 0){
             this.score++;
             this.startPosition();
         }
     }
-
-    // Decrease Y value to move upwards
-    moveUp(){
-        this.y--;
-    }
-    // Increase Y value to move downwards
-    moveDown(){
-        this.y++;
-    }
-
 }
