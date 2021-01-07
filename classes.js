@@ -8,11 +8,12 @@ Modul 152, LB - Space Race
  */
 class myText {
     // Konstruktor
-    constructor(text, font, x, y){
+    constructor(text, font, x, y, fillStyle){
         this.text = text;
         this.font = font;
         this.x = x;
         this.y = y;
+        this.fillStyle = fillStyle;
     }
 
     /**
@@ -21,6 +22,7 @@ class myText {
      */
     draw(ctx) {
         ctx.font = this.font;
+        ctx.fillStyle = this.fillStyle;
         ctx.fillText(this.text, this.x, this.y);
     }
 }
@@ -65,6 +67,7 @@ class myPlayer {
         this.color = color;
         this.name = name;
         this.score = 0;
+        this.lives = 3;
         this.isUp = false;
         this.isDown = false;
     }
@@ -101,9 +104,60 @@ class myPlayer {
             this.y++;
         }
         // Oberer Spielrand wird erreicht
-        if(this.y == 0){
-            this.score++;
+        // if(this.y <= 0){
+        //     this.score ++;
+        //     console.log(this.score);
+        //     this.startPosition();
+        // }
+    }
+
+    updateScore(){
+        // Oberer Spielrand wird erreicht
+        if(this.y <= 400){
+            this.score ++;
+            console.log("Score: " + this.score);
             this.startPosition();
         }
+        return this.score
+        
     }
+}
+
+class smallHeart {
+    constructor(x, y){
+        this.x = x;
+        this.y = y;
+    }
+
+    draw(ctx) {
+                    
+        // Draw Circle
+        ctx.strokeStyle = '#f00';
+        ctx.fillStyle = '#f00';
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, 7, 0, 2*Math.PI, true);
+        ctx.fill();
+        ctx.stroke();
+        ctx.closePath();
+
+        ctx.beginPath();
+        ctx.arc(this.x+14, this.y, 7, 0, 2*Math.PI, true);
+        ctx.fill();
+        ctx.stroke();
+        ctx.closePath();
+
+        ctx.strokeStyle = '#000';
+        ctx.linewidth = '2';
+        ctx.beginPath();
+        ctx.moveTo(this.x, this.y);
+        ctx.lineTo(this.x-5, this.y+6);
+        ctx.lineTo(this.x+7, this.y+15);
+        ctx.lineTo(this.x+19, this.y+6);
+        ctx.lineTo(this.x+14, this.y);
+        ctx.lineTo(this.x, this.y);
+        ctx.fill();
+        ctx.closePath();
+
+        }
+
 }

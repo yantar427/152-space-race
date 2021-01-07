@@ -22,7 +22,7 @@ window.onload = function() { startNewGame(); }
  * @param playerBlue    //  Player-Objekt für Player Blue
  * @param gameOver      //  Spielstatus
  */
-function showFrame(canvas, ctx, playerRed, playerBlue, gameOver) {
+function showFrame(canvas, ctx, playerRed, playerBlue, scorePlayerRedText, scorePlayerBlueText, livesPlayerRedText, livesPlayerBlueText, heartPlayerRed, heartPlayerBlue, gameOver) {
     // if(gameOver){
     //     return;
     // }
@@ -30,17 +30,19 @@ function showFrame(canvas, ctx, playerRed, playerBlue, gameOver) {
     // Positionen der Player prüfen und aktualisieren
     playerRed.updatePosition();
     playerBlue.updatePosition();
+    playerRed.updateScore();
+    playerBlue.updateScore();
 
     // Canvas löschen
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     
-    // Player-Objekte neu zeichnen
-    playerRed.draw(ctx);
-    playerBlue.draw(ctx);
+    // Spieler-Objekte neu zeichnen
+    drawGameObjects(ctx, playerRed, playerBlue, livesPlayerRedText, livesPlayerBlueText, 
+        heartPlayerRed, heartPlayerBlue, scorePlayerRedText, scorePlayerBlueText)
 
     // Nächster Schritt der Animation
     window.requestAnimationFrame(function(actualTime){
-        showFrame(canvas, ctx, playerRed, playerBlue);
+        showFrame(canvas, ctx, playerRed, playerBlue, scorePlayerRedText, scorePlayerBlueText, livesPlayerRedText, livesPlayerBlueText, heartPlayerRed, heartPlayerBlue);
     })
 }
 
@@ -176,16 +178,27 @@ function startGame(difficultyLevel, ctx, canvas) {
         changeStyle(pageTwo, canvas);
 
         let startTime = actualTime;
-
+    
         let playerRed = new myPlayer(150, 450, '#f00', 'Player Red');
         let playerBlue = new myPlayer(430, 450, '#00f', 'Player Blue');
-        playerRed.draw(ctx);
-        playerBlue.draw(ctx);
+
+        var livesPlayerRedText = new myText(playerRed.lives, "30px Raleway", 20, 40, '#fff');
+        var livesPlayerBlueText = new myText(playerBlue.lives, "30px Raleway", 530, 40, '#fff');
+
+        let heartPlayerRed = new smallHeart(50, 30);
+        let heartPlayerBlue = new smallHeart(560, 30);
+
+        var scorePlayerRedText = new myText(playerRed.updateScore(), "72px Raleway", 50, 480, '#fff');
+        var scorePlayerBlueText = new myText(playerBlue.score, "72px Raleway", 500, 480, '#fff');
+
+        // Spieler-Objekte zeichnen
+        drawGameObjects(ctx, playerRed, playerBlue, livesPlayerRedText, livesPlayerBlueText, 
+            heartPlayerRed, heartPlayerBlue, scorePlayerRedText, scorePlayerBlueText)
 
         window.addEventListener('keydown', function(){keyDown(event, playerRed, playerBlue)});
         window.addEventListener('keyup', function(){keyUp(event, playerRed, playerBlue)});
 
-        showFrame(canvas, ctx, playerRed, playerBlue);
+        showFrame(canvas, ctx, playerRed, playerBlue, scorePlayerRedText, scorePlayerBlueText, livesPlayerRedText, livesPlayerBlueText, heartPlayerRed, heartPlayerBlue);
 
     });
 
@@ -239,13 +252,39 @@ function drawGameOverPage(ctx, winner, loser) {
     }
  }
 
+ /**
+  * Funktion, um alle Game-Objekte zu zeichnen
+  * @param ctx                  // Canvas-Context zum Zeichnen aller Objekte
+  * @param playerRed            // Spieler-Objekt
+  * @param playerBlue           // Spieler-Objekt
+  * @param livesPlayerRedText   // Anzahl Leben Player Red
+  * @param livesPlayerBlueText  // Anzahl Leben Player Blue
+  * @param heartPlayerRed       // Herzsymbol
+  * @param heartPlayerBlue      // Herzsymbol
+  * @param scorePlayerRedText   // Spielstand Player Red
+  * @param scorePlayerBlueText  // Spielstand Player Blue
+  */
+function drawGameObjects(ctx, playerRed, playerBlue, livesPlayerRedText, livesPlayerBlueText, 
+    heartPlayerRed, heartPlayerBlue, scorePlayerRedText, scorePlayerBlueText) {
+
+    playerRed.draw(ctx);
+    playerBlue.draw(ctx);
+    livesPlayerRedText.draw(ctx);
+    livesPlayerBlueText.draw(ctx);
+    heartPlayerRed.draw(ctx);
+    heartPlayerBlue.draw(ctx);
+    scorePlayerRedText.draw(ctx);
+    scorePlayerBlueText.draw(ctx);
+
+}
+
 /**
  * Funktion zur Bewegung der Spielfiguren per Tastendruck
  * @param event         // Event Tastendruck
  * @param playerRed     // Spieler-Objekt von Player Red
  * @param playerBlue    // Spieler-Objekt von Player Blue
  */
- function keyDown(event, playerRed, playerBlue) {
+function keyDown(event, playerRed, playerBlue) {
     // Bewegung der Figur von Player Red (links)
     if (event.keyCode == 87) {
         // Taste 'w' für Aufwärtsbewegung
