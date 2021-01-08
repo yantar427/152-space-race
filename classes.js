@@ -150,16 +150,17 @@ class smallHeart {
         ctx.closePath();
         // Herzspitze zeichnen
         ctx.strokeStyle = '#000';
-        ctx.linewidth = '2';
+        ctx.lineWidth = '2';
         ctx.beginPath();
-        ctx.moveTo(this.x, this.y);
-        ctx.lineTo(this.x-5, this.y+6);
+        ctx.arc(this.x, this.y, 7, 0, 135*Math.PI/180, false);
         ctx.lineTo(this.x+7, this.y+15);
-        ctx.lineTo(this.x+19, this.y+6);
+        ctx.lineTo(this.x+7, this.y);
         ctx.lineTo(this.x+14, this.y);
-        ctx.lineTo(this.x, this.y);
+        ctx.arc(this.x+14, this.y, 7, 0, 45*Math.PI/180, false);
+        ctx.lineTo(this.x+7, this.y+15);
         ctx.fill();
         ctx.closePath();
+        
 
     }
 
