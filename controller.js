@@ -64,7 +64,7 @@ function showFrame(canvas, ctx, playerRed, playerBlue, scorePlayerRedText, score
         }
     }
 
-    // Anhand der zur Verfügung stehenden Leben überprüfen ob das Spiel vorbei ist
+    // Anhand der zur Verfügung stehenden Leben überprüfen, ob das Spiel vorbei ist
     if (playerBlue.lives <= 0 || playerRed.lives <= 0) {
         gameOver = true;
     }
@@ -112,9 +112,7 @@ function startNewGame() {
     var canvas = document.getElementById("space-race");
     var ctx = canvas.getContext("2d");
 
-    // Style anhand der numerischen Seitenangabe wechseln
-    changeStyle(pageOne, canvas);
-    var buttons = drawGameStartPage(ctx);
+    var buttons = drawGameStartPage(ctx, canvas);
 
     canvas.addEventListener("mousemove", function() {
         onMouseMove(event, buttons.easyButton, buttons.mediumButton, buttons.difficultButton,
@@ -127,24 +125,13 @@ function startNewGame() {
 }
 
 /**
- * Funktion, um den Style des Canvas festzulegen
- *  @param page     // Numerische Angabe, von welche Seite her die Funktion aufgerufen wird
- *  @param canvas   // Canvas Objekt um den Style anzupassen
- */
-function changeStyle(page, canvas) {
-    if (page==pageOne || page==pageThree) {
-        canvas.style.backgroundColor = "white";
-        canvas.style.border = "2px solid black";
-    } else {
-        canvas.style.backgroundColor = "black";
-    }
-}
-
-/**
  * Alle Texte und Buttons (Rechtecke) mithilfe der Klassen erstellen und zeichnen
- * @param ctx   // Canvas Context um die Texte und Buttons (Rechtecke) zu zeichnen 
+ * @param ctx     // Canvas Context um die Texte und Buttons (Rechtecke) zu zeichnen 
+ * @param canvas  // Canvas-Objekt zum Zeichnen
  */
-function drawGameStartPage(ctx) {
+function drawGameStartPage(ctx, canvas) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
     var titleText = new myText("Space Race", "50px Raleway", 150, 100);
     titleText.draw(ctx);
 
@@ -166,9 +153,9 @@ function drawGameStartPage(ctx) {
     var difficultText = new myText("Schwierig", "24px Raleway", 410, 230);
     difficultText.draw(ctx);
 
-    var startButton = new myButton(150, 330, 300, 80, 2, "#000");
+    var startButton = new myButton(150, 280, 300, 60, 2, "#000");
     startButton.draw(ctx);
-    var startText = new myText("Start", "40px Raleway", 250, 380);
+    var startText = new myText("Start", "40px Raleway", 250, 325);
     startText.draw(ctx);
 
     // Rückgabe aller Buttons (Rechtecke) mit Label
@@ -290,16 +277,21 @@ function setDifficulty(e, easyButton, mediumButton, difficultButton, startButton
     }
 }
 
+/**
+ * Funktion, um ein neues Spiel zu starten
+ * @param {*} difficultyLevel 
+ * @param {*} ctx 
+ * @param {*} canvas 
+ */
 function startGame(difficultyLevel, ctx, canvas) {
 
+    // Canvas löschen
     ctx.clearRect(0,0,canvas.width,canvas.height);
 
+    // Animation-Frame anfordern
     window.requestAnimationFrame(function(actualTime){
         let startTime = new Date();
 
-        // Canvas Style anpassen
-        changeStyle(pageTwo, canvas);
-            
         // Spieler Objekte erstellen
         let playerRed = new myPlayer(150, 450, '#f00', 'Player Red');
         let playerBlue = new myPlayer(430, 450, '#00f', 'Player Blue');
@@ -332,9 +324,11 @@ function startGame(difficultyLevel, ctx, canvas) {
             obstacle.draw(ctx);                                                                             
         })
 
+        // Event-Listener für Tastaturbewegungen setzen
         window.addEventListener('keydown', function(){keyDown(event, playerRed, playerBlue)});
         window.addEventListener('keyup', function(){keyUp(event, playerRed, playerBlue)});
 
+        // Frame anzeigen
         showFrame(canvas, ctx, playerRed, playerBlue, scorePlayerRedText, scorePlayerBlueText, 
             livesPlayerRedText, livesPlayerBlueText, heartPlayerRed, heartPlayerBlue, 
             obstacleArrays, gameOver, startTime, actualTime);
@@ -367,6 +361,7 @@ function checkCollision(obstacleArray, playerRed, playerBlue){
 
 /**
  * Alle Texte und den Button (Rechteck) für die Game-Over-Seite erstellen und zeichnen
+ * @param canvas    // Canvas-Objekt zum Zeichnen
  * @param ctx       // Canvas Context für das Zeichnen der Texte und des Buttons (Rechteck) 
  * @param winner    // Spieler-Objekt des Gewinners für die Score anzeigen
  * @param loser     // Spieler-Objekt des Verlierers für die Score anzeigen
@@ -374,8 +369,6 @@ function checkCollision(obstacleArray, playerRed, playerBlue){
 function drawGameOverPage(canvas, ctx, winner, loser) {
     // Canvas leeren um die Game Over Seite zu zeichnen
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    changeStyle(pageThree, canvas);
 
     var gameOverText = new myText("Game Over", "50px Raleway", 160, 100);
     gameOverText.draw(ctx);
@@ -390,16 +383,16 @@ function drawGameOverPage(canvas, ctx, winner, loser) {
     var loserScoreText = new myText("Score: " + loser.score, "30px Raleway", 193, 300);
     loserScoreText.draw(ctx);
 
-    var newGameButton = new myButton(200, 350, 200, 60, 2, "#000");
+    var newGameButton = new myButton(200, 360, 200, 60, 2, "#000");
     newGameButton.draw(ctx);
-    var newGameText = new myText("Neues Spiel", "28px Raleway", 218, 390);
+    var newGameText = new myText("Neues Spiel", "28px Raleway", 218, 400);
     newGameText.draw(ctx);
 
     canvas.addEventListener("click", function() {
-        newGameButton(event, newGameButton);
+        newGame(event, newGameButton, ctx, canvas);
     });
 
- }
+}
 
  /**
   * Funktion, um ein neues Spiel zu starten, solange die Maus auf dem Button (Rechteck) 
@@ -407,7 +400,7 @@ function drawGameOverPage(canvas, ctx, winner, loser) {
   * @param e        // Event um die Position der Maus zu erhalten 
   * @param button   // Buttonobjekt um ein neues Spiel zu starten 
   */
- function newGameButton(e, button) {
+ function newGame(e, button, ctx, canvas) {
     // Mausposition ermitteln
     let boundingCanvas = document.getElementById("space-race").getBoundingClientRect();
     let mouseX = e.clientX - boundingCanvas.left;
@@ -416,7 +409,7 @@ function drawGameOverPage(canvas, ctx, winner, loser) {
     if (mouseX > button.x && mouseX < button.x + button.width && 
         mouseY > button.y && mouseY < button.y + button.height) {
         // Neues Spiel starten
-        startNewGame();
+        drawGameStartPage(ctx, canvas);
     }
  }
 
@@ -517,7 +510,7 @@ function keyUp(event, playerRed, playerBlue) {
 }
 
 /**
- * Erstellen und vorzeichnen aller Hindernisse (Kreise)
+ * Erstellen und Vorzeichnen aller Hindernisse (Kreise)
  * @param ctx // Canvas Kontext
  */
 function createObstaclesLowLevel(ctx) {
@@ -555,8 +548,8 @@ function createObstaclesLowLevel(ctx) {
 }
 
 /**
- * Erstellen und vorzeichnen aller Hindernisse (Kreise)
- * Gibt ein Array mit allen Hindernissen zurürck
+ * Erstellen und Vorzeichnen aller Hindernisse (Kreise)
+ * Gibt ein Array mit allen Hindernissen zurück
  * @param ctx   // Canvas Context 
  */
 function createObstaclesHighLevel(ctx) {
@@ -588,7 +581,7 @@ function createObstaclesHighLevel(ctx) {
     // Eindimensionales Array mit allen Hindernissen (Kreise)
     var obstacleArray = [obstacle11, obstacle12, obstacle13, obstacle14, obstacle15, 
                          obstacle16, obstacle17, obstacle18, obstacle19, obstacle20];
-    // Alle Hindernisse für die andere Richtung hohlen
+    // Alle Hindernisse für die andere Richtung holen
     var obstacleArrayLowLevel = createObstaclesLowLevel(ctx)
 
     obstacleArrayLowLevel.forEach(element => {

@@ -8,12 +8,12 @@ Modul 152, LB - Space Race
  */
 class myText {
     // Konstruktor
-    constructor(text, font, x, y, fillStyle){
+    constructor(text, font, x, y){
         this.text = text;
         this.font = font;
         this.x = x;
         this.y = y;
-        this.fillStyle = fillStyle;
+        this.fillStyle = '#fff';
     }
 
     /**
