@@ -35,6 +35,7 @@ function showFrame(canvas, ctx, playerRed, playerBlue, scorePlayerRedText, score
     //     return;
     // }
 
+    checkCollision(obstacleArrays, playerRed, playerBlue);
     // Positionen der Player prüfen und aktualisieren
     playerRed.updatePosition();
     playerBlue.updatePosition();
@@ -290,7 +291,7 @@ function startGame(difficultyLevel, ctx, canvas) {
 
 }
 
-function checkCollision(obstacleArray){
+function checkCollision(obstacleArray, playerRed, playerBlue){
     for (obstacle in obstacleArray) {
         if (obstacle.x >= playerRed.x && obstacle.x <= playerRed.x + playerRed.width &&
             obstacle.y >= playerRed.y && obstacle.y <= playerRed.y + playerRed.height) {
