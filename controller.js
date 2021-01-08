@@ -57,7 +57,7 @@ function showFrame(canvas, ctx, playerRed, playerBlue, scorePlayerRedText, score
         // Aktuelle Zeit Setzten
         var currentTime = new Date();
         // Vergleichen ob Zeit bereits abgelaufen
-        if (Math.abs(currentTime.getTime()-startTime.getTime()) === 10000) {
+        if (Math.abs(currentTime.getTime()-startTime.getTime()) >= 10000) {
             // Geschwindigkeit erhöhen
             increaseObstacleSpeed(obstacleArrays);
         }
