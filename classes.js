@@ -164,4 +164,30 @@ class smallHeart {
 
     }
 
+/**
+ * Klass zum erstellen der Hindernisse (Kreis)
+ */
+class myObstacle {
+    constructor(x, y, r, direction) {
+        this.x = x;
+        this.y = y;
+        this.r = r;
+        this.style = "#fff";
+        this.sAngle = 0;
+        this.eAngle = 2 * Math.PI;
+        this.direction = direction;
+    }
+    
+    /**
+     * Zeichnen des Hindernis (Kreis)
+     * @param ctx 
+     */
+    draw(ctx) {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.r, this.sAngle, this.eAngle);
+        ctx.strokeStyle = this.style;
+        ctx.fillStyle = this.style;
+        ctx.stroke();
+        ctx.fill();
+    }
 }

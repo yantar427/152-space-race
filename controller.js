@@ -8,6 +8,12 @@ const pageOne = 1;
 const pageTwo = 2;
 const pageThree = 3;
 
+// Konstatendeklaration für die Schwierigkeitsstufen
+const easy = 1;
+const medium = 2;
+const difficult = 3;
+const none = 0;
+
 // Initialisierung für die Angabe zum Level
 var difficultyLevel = 0;
 
@@ -22,7 +28,7 @@ window.onload = function() { startNewGame(); }
  * @param playerBlue    //  Player-Objekt für Player Blue
  * @param gameOver      //  Spielstatus
  */
-function showFrame(canvas, ctx, playerRed, playerBlue, scorePlayerRedText, scorePlayerBlueText, livesPlayerRedText, livesPlayerBlueText, heartPlayerRed, heartPlayerBlue, gameOver) {
+function showFrame(canvas, ctx, playerRed, playerBlue, scorePlayerRedText, scorePlayerBlueText, livesPlayerRedText, livesPlayerBlueText, heartPlayerRed, heartPlayerBlue, obstacleArrays, gameOver) {
     // if(gameOver){
     //     return;
     // }
@@ -33,15 +39,24 @@ function showFrame(canvas, ctx, playerRed, playerBlue, scorePlayerRedText, score
 
     // Canvas löschen
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    
+   
     // Spieler-Objekte neu zeichnen
     drawGameObjects(ctx, playerRed, playerBlue, livesPlayerRedText, livesPlayerBlueText, 
         heartPlayerRed, heartPlayerBlue, scorePlayerRedText, scorePlayerBlueText);
     console.log(playerBlue.score);
 
-    // Nächster Schritt der Animation
+    // Alle Hindernisse zeichnen
+    obstacleArrays.forEach(item => {
+        item.forEach(element => {
+            element.forEach(obstacle => {
+                obstacle.draw(ctx);
+            })
+        })
+    })
+
+// Nächster Schritt der Animation
     window.requestAnimationFrame(function(actualTime){
-        showFrame(canvas, ctx, playerRed, playerBlue, scorePlayerRedText, scorePlayerBlueText, livesPlayerRedText, livesPlayerBlueText, heartPlayerRed, heartPlayerBlue);
+        showFrame(canvas, ctx, playerRed, playerBlue, scorePlayerRedText, scorePlayerBlueText, livesPlayerRedText, livesPlayerBlueText, heartPlayerRed, heartPlayerBlue, obstacleArrays, gameOver);
     })
 }
 
@@ -49,7 +64,6 @@ function showFrame(canvas, ctx, playerRed, playerBlue, scorePlayerRedText, score
  * Funktion, um den Startbildschirm anzuzeigen
  */
 function startNewGame() {
-    console.log("halloooo");
     // Canvas Object
     /** @type {HTMLCanvasElement} */
     var canvas = document.getElementById("space-race");
@@ -131,12 +145,6 @@ function drawGameStartPage(ctx) {
  * @param canvas            // Canvas Objekt zur Weitergabe
  */
 function setDifficulty(e, easyButton, mediumButton, difficultButton, startButton, ctx, canvas) {
-    // Konstatendeklaration für die Schwierigkeitsstufen
-    const easy = 1;
-    const medium = 2;
-    const difficult = 3;
-    const none = 0;
-
     // Erfassen der Mausposition
     let boundingCanvas = document.getElementById("space-race").getBoundingClientRect();
     let mouseX = e.clientX - boundingCanvas.left;
@@ -194,11 +202,24 @@ function startGame(difficultyLevel, ctx, canvas) {
         drawGameObjects(ctx, playerRed, playerBlue, livesPlayerRedText, livesPlayerBlueText, 
             heartPlayerRed, heartPlayerBlue, scorePlayerRedText, scorePlayerBlueText)
 
+        if (difficultyLevel==easy) {
+            var obstacleArrays = createObstaclesLowLevel(ctx);
+        } else {
+            var obstacleArrays = createObstaclesHighLevel(ctx);
+        }
+        
+        obstacleArrays.forEach(item => {
+            item.forEach(element => {
+                element.forEach(obstacle => {
+                    obstacle.draw(ctx);
+                })
+            })
+        })
+
         window.addEventListener('keydown', function(){keyDown(event, playerRed, playerBlue)});
         window.addEventListener('keyup', function(){keyUp(event, playerRed, playerBlue)});
 
-        showFrame(canvas, ctx, playerRed, playerBlue, scorePlayerRedText, scorePlayerBlueText, livesPlayerRedText, livesPlayerBlueText, heartPlayerRed, heartPlayerBlue);
-
+        showFrame(canvas, ctx, playerRed, playerBlue, scorePlayerRedText, scorePlayerBlueText, livesPlayerRedText, livesPlayerBlueText, heartPlayerRed, heartPlayerBlue, obstacleArrays, gameOver);
     });
 
 }
@@ -345,4 +366,89 @@ function keyUp(event, playerRed, playerBlue) {
         // Taste 'Pfeil nach unten' freigegeben
         playerBlue.isDown = false;
     }
+}
+
+/**
+ * Erstellen und vorzeichnen aller Hindernisse (Kreise)
+ * @param ctx // Canvas Kontext
+ */
+function createObstaclesLowLevel(ctx) {
+    // Erstellen aller Hindernisse (Kreise)
+    // True steht für die Richtung Links
+    let obstacle1 = new myObstacle(500, 50, 3, true);
+    let obstacle2 = new myObstacle(150, 200, 3, true);
+    let obstacle3 = new myObstacle(50, 100, 3, true);
+    let obstacle4 = new myObstacle(250, 300, 3, true);
+    let obstacle5 = new myObstacle(150, 410, 3, true);
+    let obstacle6 = new myObstacle(450, 340, 3, true);
+    let obstacle7 = new myObstacle(310, 270, 3, true);
+    let obstacle8 = new myObstacle(240, 90, 3, true);
+    let obstacle9 = new myObstacle(380, 150, 3, true);
+    let obstacle10 = new myObstacle(400, 240, 3, true);
+
+    // Vorzeichnen aller Hindernisse (Kreise)
+    obstacle1.draw(ctx);
+    obstacle2.draw(ctx);
+    obstacle3.draw(ctx);
+    obstacle4.draw(ctx);
+    obstacle5.draw(ctx);
+    obstacle6.draw(ctx);
+    obstacle7.draw(ctx);
+    obstacle8.draw(ctx);
+    obstacle9.draw(ctx);
+    obstacle10.draw(ctx);
+
+    // Eindimensionales Array mit allen Hindernissen (Kreise)
+    var obstacleArrayLeft = [obstacle1, obstacle2, obstacle3, obstacle4, obstacle5, 
+                             obstacle6, obstacle7, obstacle8, obstacle9, obstacle10];
+
+    // Finales, zweidimensionales Array erstellen
+    var obstacleArrays = [obstacleArrayLeft];
+
+    // Finales Array zurückgeben
+    return obstacleArrays;
+}
+
+/**
+ * Erstellen und vorzeichnen aller Hindernisse (Kreise)
+ * Gibt ein Array mit allen Hindernissen zurürck
+ * @param ctx   // Canvas Context 
+ */
+function createObstaclesHighLevel(ctx) {
+    // Erstellen aller Hindernisse (Kreise)
+    // False steht für die Richtung Rechts
+    let obstacle1 = new myObstacle(550, 400, 3, false);
+    let obstacle2 = new myObstacle(430, 250, 3, false);
+    let obstacle3 = new myObstacle(50, 320, 3, false);
+    let obstacle4 = new myObstacle(300, 420, 3, false);
+    let obstacle5 = new myObstacle(580, 210, 3, false);
+    let obstacle6 = new myObstacle(80, 300, 3, false);
+    let obstacle7 = new myObstacle(280, 230, 3, false);
+    let obstacle8 = new myObstacle(130, 140, 3, false);
+    let obstacle9 = new myObstacle(510, 110, 3, false);
+    let obstacle10 = new myObstacle(480, 280, 3, false);
+
+    // Vorzeichnen aller Hindernisse (Kreise)
+    obstacle1.draw(ctx);
+    obstacle2.draw(ctx);
+    obstacle3.draw(ctx);
+    obstacle4.draw(ctx);
+    obstacle5.draw(ctx);
+    obstacle6.draw(ctx);
+    obstacle7.draw(ctx);
+    obstacle8.draw(ctx);
+    obstacle9.draw(ctx);
+    obstacle10.draw(ctx);
+
+    // Eindimensionales Array mit allen Hindernissen (Kreise)
+    var obstacleArrayRight = [obstacle1, obstacle2, obstacle3, obstacle4, obstacle5, 
+                              obstacle6, obstacle7, obstacle8, obstacle9, obstacle10];
+    // Alle Hindernisse für die andere Richtung hohlen
+    var obstacleArrayLeft = createObstaclesLowLevel(ctx)
+
+    // Finales, zweidimensionales Array erstellen
+    var obstacleArrays = [obstacleArrayLeft, obstacleArrayRight]
+
+    // Finales Array zurückgeben
+    return obstacleArrays;
 }
