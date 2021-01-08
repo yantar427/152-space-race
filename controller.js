@@ -51,16 +51,15 @@ function showFrame(canvas, ctx, playerRed, playerBlue, scorePlayerRedText, score
         obstacle.updatePosition(speed);
         obstacle.draw(ctx);
     })
-    var currentTime = new Date();
 
+    // Schwierigkeitsgrad abfragen für Geschwindigkeitserhöhung
     if (difficultyLevel == difficult) {
-        console.log(startTime);
-        console.log(startTime.setSeconds(startTime.getSeconds() + 3))
-
-        if (startTime.setSeconds(startTime.getSeconds() + 3) === currentTime) {
-            console.log("drin");
+        // Aktuelle Zeit Setzten
+        var currentTime = new Date();
+        // Vergleichen ob Zeit bereits abgelaufen
+        if (Math.abs(currentTime.getTime()-startTime.getTime()) === 10000) {
+            // Geschwindigkeit erhöhen
             increaseObstacleSpeed(obstacleArrays);
-            startTime = startTime + 3;
         }
     }
 
@@ -97,9 +96,14 @@ function showFrame(canvas, ctx, playerRed, playerBlue, scorePlayerRedText, score
     }
 }
 
+/**
+ * Funktion um die Geschwindigkeit der Hindernisse zu erhöhen
+ * @param obstacleArray // Array mit allen Hindernissen
+ */
 function increaseObstacleSpeed(obstacleArray) {
+    var newSpeed = speed + 1;
     obstacleArray.forEach(obstacle => {
-        obstacle.updatePosition(1);
+        obstacle.updatePosition(newSpeed);
     })
 }
 
