@@ -25,6 +25,19 @@ class myText {
         ctx.fillStyle = this.fillStyle;
         ctx.fillText(this.text, this.x, this.y);
     }
+
+    /**
+     * Zeichnet Text mit aktualisiertem Inhalt
+     * @param ctx   // Canvas-Context zum Zeichnen
+     * @param text  // aktualisierter Text
+     */
+    drawUpdatedText(ctx, text) {
+        ctx.font = this.font;
+        ctx.fillStyle = this.fillStyle;
+        ctx.fillText(text, this.x, this.y);
+
+    }
+
 }
 
 /**
@@ -91,6 +104,7 @@ class myPlayer {
         this.isUp = false;
         this.isDown = false;
     }
+    
 
     /**
      * Neue Position setzen
@@ -104,22 +118,11 @@ class myPlayer {
             this.y++;
         }
         // Oberer Spielrand wird erreicht
-        // if(this.y <= 0){
-        //     this.score ++;
-        //     console.log(this.score);
-        //     this.startPosition();
-        // }
-    }
-
-    updateScore(){
-        // Oberer Spielrand wird erreicht
-        if(this.y <= 400){
+        if(this.y <= 0){
             this.score ++;
-            console.log("Score: " + this.score);
+            console.log("Score " + this.name + ": " + this.score);
             this.startPosition();
         }
-        return this.score
-        
     }
 }
 
@@ -131,7 +134,7 @@ class smallHeart {
 
     draw(ctx) {
                     
-        // Draw Circle
+        // Linken Kreis zeichnen
         ctx.strokeStyle = '#f00';
         ctx.fillStyle = '#f00';
         ctx.beginPath();
@@ -139,13 +142,13 @@ class smallHeart {
         ctx.fill();
         ctx.stroke();
         ctx.closePath();
-
+        // Rechten Kreis zeichnen
         ctx.beginPath();
         ctx.arc(this.x+14, this.y, 7, 0, 2*Math.PI, true);
         ctx.fill();
         ctx.stroke();
         ctx.closePath();
-
+        // Herzspitze zeichnen
         ctx.strokeStyle = '#000';
         ctx.linewidth = '2';
         ctx.beginPath();
@@ -158,6 +161,6 @@ class smallHeart {
         ctx.fill();
         ctx.closePath();
 
-        }
+    }
 
 }

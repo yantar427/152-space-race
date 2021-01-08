@@ -30,15 +30,14 @@ function showFrame(canvas, ctx, playerRed, playerBlue, scorePlayerRedText, score
     // Positionen der Player prüfen und aktualisieren
     playerRed.updatePosition();
     playerBlue.updatePosition();
-    playerRed.updateScore();
-    playerBlue.updateScore();
 
     // Canvas löschen
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     
     // Spieler-Objekte neu zeichnen
     drawGameObjects(ctx, playerRed, playerBlue, livesPlayerRedText, livesPlayerBlueText, 
-        heartPlayerRed, heartPlayerBlue, scorePlayerRedText, scorePlayerBlueText)
+        heartPlayerRed, heartPlayerBlue, scorePlayerRedText, scorePlayerBlueText);
+    console.log(playerBlue.score);
 
     // Nächster Schritt der Animation
     window.requestAnimationFrame(function(actualTime){
@@ -188,7 +187,7 @@ function startGame(difficultyLevel, ctx, canvas) {
         let heartPlayerRed = new smallHeart(50, 30);
         let heartPlayerBlue = new smallHeart(560, 30);
 
-        var scorePlayerRedText = new myText(playerRed.updateScore(), "72px Raleway", 50, 480, '#fff');
+        var scorePlayerRedText = new myText(playerRed.score, "72px Raleway", 50, 480, '#fff');
         var scorePlayerBlueText = new myText(playerBlue.score, "72px Raleway", 500, 480, '#fff');
 
         // Spieler-Objekte zeichnen
@@ -269,12 +268,12 @@ function drawGameObjects(ctx, playerRed, playerBlue, livesPlayerRedText, livesPl
 
     playerRed.draw(ctx);
     playerBlue.draw(ctx);
-    livesPlayerRedText.draw(ctx);
-    livesPlayerBlueText.draw(ctx);
+    livesPlayerRedText.drawUpdatedText(ctx, playerRed.lives);
+    livesPlayerBlueText.drawUpdatedText(ctx, playerBlue.lives);
     heartPlayerRed.draw(ctx);
     heartPlayerBlue.draw(ctx);
-    scorePlayerRedText.draw(ctx);
-    scorePlayerBlueText.draw(ctx);
+    scorePlayerRedText.drawUpdatedText(ctx, playerRed.score);
+    scorePlayerBlueText.drawUpdatedText(ctx, playerBlue.score);
     drawDivider(ctx);
 
 }
