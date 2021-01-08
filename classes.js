@@ -8,11 +8,12 @@ Modul 152, LB - Space Race
  */
 class myText {
     // Konstruktor
-    constructor(text, font, x, y){
+    constructor(text, font, x, y, fillStyle){
         this.text = text;
         this.font = font;
         this.x = x;
         this.y = y;
+        this.fillStyle = fillStyle;
     }
 
     /**
@@ -21,8 +22,22 @@ class myText {
      */
     draw(ctx) {
         ctx.font = this.font;
+        ctx.fillStyle = this.fillStyle;
         ctx.fillText(this.text, this.x, this.y);
     }
+
+    /**
+     * Zeichnet Text mit aktualisiertem Inhalt
+     * @param ctx   // Canvas-Context zum Zeichnen
+     * @param text  // aktualisierter Text
+     */
+    drawUpdatedText(ctx, text) {
+        ctx.font = this.font;
+        ctx.fillStyle = this.fillStyle;
+        ctx.fillText(text, this.x, this.y);
+
+    }
+
 }
 
 /**
@@ -65,6 +80,7 @@ class myPlayer {
         this.color = color;
         this.name = name;
         this.score = 0;
+        this.lives = 3;
         this.isUp = false;
         this.isDown = false;
     }
@@ -88,6 +104,7 @@ class myPlayer {
         this.isUp = false;
         this.isDown = false;
     }
+    
 
     /**
      * Neue Position setzen
@@ -101,12 +118,51 @@ class myPlayer {
             this.y++;
         }
         // Oberer Spielrand wird erreicht
-        if(this.y == 0){
-            this.score++;
+        if(this.y <= 0){
+            this.score ++;
+            console.log("Score " + this.name + ": " + this.score);
             this.startPosition();
         }
     }
 }
+
+class smallHeart {
+    constructor(x, y){
+        this.x = x;
+        this.y = y;
+    }
+
+    draw(ctx) {
+                    
+        // Linken Kreis zeichnen
+        ctx.strokeStyle = '#f00';
+        ctx.fillStyle = '#f00';
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, 7, 0, 2*Math.PI, true);
+        ctx.fill();
+        ctx.stroke();
+        ctx.closePath();
+        // Rechten Kreis zeichnen
+        ctx.beginPath();
+        ctx.arc(this.x+14, this.y, 7, 0, 2*Math.PI, true);
+        ctx.fill();
+        ctx.stroke();
+        ctx.closePath();
+        // Herzspitze zeichnen
+        ctx.strokeStyle = '#000';
+        ctx.lineWidth = '2';
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, 7, 0, 135*Math.PI/180, false);
+        ctx.lineTo(this.x+7, this.y+15);
+        ctx.lineTo(this.x+7, this.y);
+        ctx.lineTo(this.x+14, this.y);
+        ctx.arc(this.x+14, this.y, 7, 0, 45*Math.PI/180, false);
+        ctx.lineTo(this.x+7, this.y+15);
+        ctx.fill();
+        ctx.closePath();
+        
+
+    }
 
 /**
  * Klass zum erstellen der Hindernisse (Kreis)
