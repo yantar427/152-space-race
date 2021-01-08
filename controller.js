@@ -62,6 +62,7 @@ function showFrame(canvas, ctx, playerRed, playerBlue, scorePlayerRedText, score
         drawGameOverPage(ctx, winner, loser);
     }
 
+    checkCollision(obstacleArrays, playerRed, playerBlue);
     // Positionen der Player prüfen und aktualisieren
     playerRed.updatePosition();
     playerBlue.updatePosition();
@@ -98,6 +99,10 @@ function startNewGame() {
     changeStyle(pageOne, canvas);
     var buttons = drawGameStartPage(ctx);
 
+    canvas.addEventListener("mousemove", function() {
+        onMouseMove(event, buttons.easyButton, buttons.mediumButton, buttons.difficultButton,
+            buttons.startButton, ctx, canvas)});
+
     canvas.addEventListener("click", function() {
         setDifficulty(event, buttons.easyButton, buttons.mediumButton, 
             buttons.difficultButton, buttons.startButton, ctx, canvas)});
@@ -130,17 +135,17 @@ function drawGameStartPage(ctx) {
     difficultyText.draw(ctx);
 
     var easyButton = new myButton(50, 200, 150, 40, 2, "#000");
-    easyButton.draw(ctx);
+    easyButton.draw(ctx,'#000');
     var easyText = new myText("Leicht", "24px Raleway", 90, 230);
     easyText.draw(ctx);
     
     var mediumButton = new myButton(220, 200, 150, 40, 2, "#000");
-    mediumButton.draw(ctx);
+    mediumButton.draw(ctx,'#000');
     var mediumText = new myText("Mittel", "24px Raleway", 260, 230);
     mediumText.draw(ctx);
     
     var difficultButton = new myButton(390, 200, 150, 40, 2, "#000");
-    difficultButton.draw(ctx);
+    difficultButton.draw(ctx, '#000');
     var difficultText = new myText("Schwierig", "24px Raleway", 410, 230);
     difficultText.draw(ctx);
 
@@ -159,7 +164,46 @@ function drawGameStartPage(ctx) {
 }
 
 /**
- * Funktion zum Setzen des Schwirigkeitsgrads und für das Starten des Spiels, sofern ein 
+ * Funktion für Mouseover-Animation
+ * @param e                 // Event um die Mausposition zu erhalten 
+ * @param easyButton        // Buttonobjekt für die Schwierigkeitsstufe "Leicht"  
+ * @param mediumButton      // Buttonobjekt für die Schwierigkeitsstufe "Mittel"
+ * @param difficultButton   // Buttonobjekt für die Schwierigkeitsstufe "Schwierig"
+ * @param startButton       // Buttonobjekt um das Spiel zu starten
+ * @param ctx               // Canvas Context zur Weitergabe
+ * @param canvas            // Canvas Objekt zur Weitergabe
+ */
+function onMouseMove(e, easyButton, mediumButton, difficultButton, startButton, ctx, canvas) {
+
+    // Erfassen der Mausposition
+    let boundingCanvas = document.getElementById("space-race").getBoundingClientRect();
+    let mouseX = e.clientX - boundingCanvas.left;
+    let mouseY = e.clientY - boundingCanvas.top;
+
+    // Check ob Maus auf einem Button liegt oder nicht
+    if (mouseX > easyButton.x && mouseX < easyButton.x + easyButton.width && 
+        mouseY > easyButton.y && mouseY < easyButton.y + easyButton.height) {
+        // Cursor ändern
+        canvas.style.cursor = 'pointer';
+    } else if (mouseX > mediumButton.x && mouseX < mediumButton.x + mediumButton.width && 
+               mouseY > mediumButton.y && mouseY < mediumButton.y + mediumButton.height) {
+        // Cursor ändern
+        canvas.style.cursor = 'pointer';
+    } else if (mouseX > difficultButton.x && mouseX < difficultButton.x + difficultButton.width && 
+               mouseY > difficultButton.y && mouseY < difficultButton.y + difficultButton.height) {
+        // Cursor ändern
+        canvas.style.cursor = 'pointer';
+    } else if (mouseX > startButton.x && mouseX < startButton.x + startButton.width && 
+               mouseY > startButton.y && mouseY < startButton.y + startButton.height) {
+        // Cursor ändern
+        canvas.style.cursor = 'pointer';
+    } else {
+        canvas.style.cursor = 'default';
+    }
+}
+
+/**
+ * Funktion zum Setzen des Schwierigkeitsgrads und für das Starten des Spiels, sofern ein 
  * Schwierigkeitsgrad gesetzt ist
  * @param e                 // Event um die Mausposition zu erhalten 
  * @param easyButton        // Buttonobjekt für die Schwierigkeitsgrad "Leicht"  
@@ -180,14 +224,33 @@ function setDifficulty(e, easyButton, mediumButton, difficultButton, startButton
         mouseY > easyButton.y && mouseY < easyButton.y + easyButton.height) {
         // Schwierigkeitsstufe setzen
         difficultyLevel = easy;
+        // Gewählten Button farblich abheben
+        easyButton.strokeStyle = '#f00';
+        mediumButton.strokeStyle = '#000';
+        difficultButton.strokeStyle = '#000';
+        easyButton.draw(ctx);
+        mediumButton.draw(ctx);
+        difficultButton.draw(ctx);
     } else if (mouseX > mediumButton.x && mouseX < mediumButton.x + mediumButton.width && 
                mouseY > mediumButton.y && mouseY < mediumButton.y + mediumButton.height) {
         // Schwierigkeitsstufe setzen
         difficultyLevel = medium;
+        easyButton.strokeStyle = '#000';
+        mediumButton.strokeStyle = '#f00';
+        difficultButton.strokeStyle = '#000';
+        easyButton.draw(ctx);
+        mediumButton.draw(ctx);
+        difficultButton.draw(ctx);
     } else if (mouseX > difficultButton.x && mouseX < difficultButton.x + difficultButton.width && 
                mouseY > difficultButton.y && mouseY < difficultButton.y + difficultButton.height) {
         // Schwierigkeitsstufe setzen
         difficultyLevel = difficult;
+        easyButton.strokeStyle = '#000';
+        mediumButton.strokeStyle = '#000';
+        difficultButton.strokeStyle = '#f00';
+        easyButton.draw(ctx);
+        mediumButton.draw(ctx);
+        difficultButton.draw(ctx);
     } else if (mouseX > startButton.x && mouseX < startButton.x + startButton.width && 
                mouseY > startButton.y && mouseY < startButton.y + startButton.height) {
             // Check ob eine Schwierigkeitsstufe gesetzt ist
@@ -200,10 +263,19 @@ function setDifficulty(e, easyButton, mediumButton, difficultButton, startButton
     } else {
         // Schwierigkeitsstufe setzen
         difficultyLevel = none;
+        easyButton.strokeStyle = '#000';
+        mediumButton.strokeStyle = '#000';
+        difficultButton.strokeStyle = '#000';
+        easyButton.draw(ctx);
+        mediumButton.draw(ctx);
+        difficultButton.draw(ctx);
+
     }
 }
 
 function startGame(difficultyLevel, ctx, canvas) {
+
+    ctx.clearRect(0,0,canvas.width,canvas.height);
 
     window.requestAnimationFrame(function(actualTime){
         let startTime = actualTime;
@@ -249,6 +321,30 @@ function startGame(difficultyLevel, ctx, canvas) {
         showFrame(canvas, ctx, playerRed, playerBlue, scorePlayerRedText, scorePlayerBlueText, livesPlayerRedText, livesPlayerBlueText, heartPlayerRed, heartPlayerBlue, obstacleArrays, gameOver);
     });
 
+}
+
+/**
+ * Funktion, die prüft, ob ein Spieler mit einem Hindernis kollidiert. Im Kollisionsfall
+ * wird die Anzahl Leben um 1 vermindert und das Spieler-Objekt in die Startposition
+ * zurückversetzt.
+ * @param obstacleArray     // Array mit allen Hindernissen
+ * @param playerRed         // Spieler-Objekt
+ * @param playerBlue        // Spieler-Objekt
+ */
+function checkCollision(obstacleArray, playerRed, playerBlue){
+    obstacleArray.forEach(obstacle => {
+        // Kollision mit Player Red?
+        if (obstacle.x >= playerRed.x && obstacle.x <= playerRed.x + playerRed.width &&
+            obstacle.y >= playerRed.y && obstacle.y <= playerRed.y + playerRed.height) {
+            playerRed.lives--;
+            playerRed.startPosition();
+        // Kollision mit Player Blue?
+        } else if(obstacle.x >= playerBlue.x && obstacle.x <= playerBlue.x + playerBlue.width &&
+            obstacle.y >= playerBlue.y && obstacle.y <= playerBlue.y + playerBlue.height) {
+            playerBlue.lives--;
+            playerBlue.startPosition();
+        }
+    })
 }
 
 /**
@@ -477,3 +573,5 @@ function createObstaclesHighLevel(ctx) {
     // Finales Array zurückgeben
     return obstacleArray;
 }
+
+
