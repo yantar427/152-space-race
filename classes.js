@@ -163,6 +163,7 @@ class smallHeart {
         
 
     }
+}
 
 /**
  * Klass zum erstellen der Hindernisse (Kreis)
