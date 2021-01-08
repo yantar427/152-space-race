@@ -44,6 +44,7 @@ function showFrame(canvas, ctx, playerRed, playerBlue, obstacleArrays, gameOver)
     playerRed.draw(ctx);
     playerBlue.draw(ctx);
     
+    // Alle Hindernisse zeichnen
     obstacleArrays.forEach(item => {
         item.forEach(element => {
             element.forEach(obstacle => {
@@ -315,7 +316,13 @@ function keyUp(event, playerRed, playerBlue) {
     }
 }
 
+/**
+ * Erstellen und vorzeichnen aller Hindernisse (Kreise)
+ * @param ctx // Canvas Kontext
+ */
 function createObstaclesLowLevel(ctx) {
+    // Erstellen aller Hindernisse (Kreise)
+    // True steht für die Richtung Links
     let obstacle1 = new myObstacle(500, 50, 3, true);
     let obstacle2 = new myObstacle(150, 200, 3, true);
     let obstacle3 = new myObstacle(50, 100, 3, true);
@@ -327,6 +334,7 @@ function createObstaclesLowLevel(ctx) {
     let obstacle9 = new myObstacle(380, 150, 3, true);
     let obstacle10 = new myObstacle(400, 240, 3, true);
 
+    // Vorzeichnen aller Hindernisse (Kreise)
     obstacle1.draw(ctx);
     obstacle2.draw(ctx);
     obstacle3.draw(ctx);
@@ -338,26 +346,37 @@ function createObstaclesLowLevel(ctx) {
     obstacle9.draw(ctx);
     obstacle10.draw(ctx);
 
+    // Eindimensionales Array mit allen Hindernissen (Kreise)
     var obstacleArrayLeft = [obstacle1, obstacle2, obstacle3, obstacle4, obstacle5, 
                              obstacle6, obstacle7, obstacle8, obstacle9, obstacle10];
 
+    // Finales, zweidimensionales Array erstellen
     var obstacleArrays = [obstacleArrayLeft];
 
+    // Finales Array zurückgeben
     return obstacleArrays;
 }
 
+/**
+ * Erstellen und vorzeichnen aller Hindernisse (Kreise)
+ * Gibt ein Array mit allen Hindernissen zurürck
+ * @param ctx   // Canvas Context 
+ */
 function createObstaclesHighLevel(ctx) {
-    let obstacle1 = new myObstacle(550, 400, 3, true);
-    let obstacle2 = new myObstacle(430, 250, 3, true);
-    let obstacle3 = new myObstacle(50, 320, 3, true);
-    let obstacle4 = new myObstacle(300, 420, 3, true);
-    let obstacle5 = new myObstacle(580, 210, 3, true);
-    let obstacle6 = new myObstacle(80, 300, 3, true);
-    let obstacle7 = new myObstacle(280, 230, 3, true);
-    let obstacle8 = new myObstacle(130, 140, 3, true);
-    let obstacle9 = new myObstacle(510, 110, 3, true);
-    let obstacle10 = new myObstacle(480, 280, 3, true);
+    // Erstellen aller Hindernisse (Kreise)
+    // False steht für die Richtung Rechts
+    let obstacle1 = new myObstacle(550, 400, 3, false);
+    let obstacle2 = new myObstacle(430, 250, 3, false);
+    let obstacle3 = new myObstacle(50, 320, 3, false);
+    let obstacle4 = new myObstacle(300, 420, 3, false);
+    let obstacle5 = new myObstacle(580, 210, 3, false);
+    let obstacle6 = new myObstacle(80, 300, 3, false);
+    let obstacle7 = new myObstacle(280, 230, 3, false);
+    let obstacle8 = new myObstacle(130, 140, 3, false);
+    let obstacle9 = new myObstacle(510, 110, 3, false);
+    let obstacle10 = new myObstacle(480, 280, 3, false);
 
+    // Vorzeichnen aller Hindernisse (Kreise)
     obstacle1.draw(ctx);
     obstacle2.draw(ctx);
     obstacle3.draw(ctx);
@@ -369,11 +388,15 @@ function createObstaclesHighLevel(ctx) {
     obstacle9.draw(ctx);
     obstacle10.draw(ctx);
 
+    // Eindimensionales Array mit allen Hindernissen (Kreise)
     var obstacleArrayRight = [obstacle1, obstacle2, obstacle3, obstacle4, obstacle5, 
                               obstacle6, obstacle7, obstacle8, obstacle9, obstacle10];
+    // Alle Hindernisse für die andere Richtung hohlen
     var obstacleArrayLeft = createObstaclesLowLevel(ctx)
 
+    // Finales, zweidimensionales Array erstellen
     var obstacleArrays = [obstacleArrayLeft, obstacleArrayRight]
 
+    // Finales Array zurückgeben
     return obstacleArrays;
 }
