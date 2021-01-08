@@ -3,6 +3,8 @@ Modul 152, LB - Space Race
 08.01.2021, Alessia Siegrist und Tanja Wyder
 */
 
+// Konstante für das Game Over Flag setzten
+const gameOver = false;
 // Konstanten für die Angabe zur aktuellen Seite
 const pageOne = 1;
 const pageTwo = 2;
@@ -44,15 +46,11 @@ function showFrame(canvas, ctx, playerRed, playerBlue, scorePlayerRedText, score
     // Spieler-Objekte neu zeichnen
     drawGameObjects(ctx, playerRed, playerBlue, livesPlayerRedText, livesPlayerBlueText, 
         heartPlayerRed, heartPlayerBlue, scorePlayerRedText, scorePlayerBlueText);
-    console.log(playerBlue.score);
 
     // Alle Hindernisse zeichnen
-    obstacleArrays.forEach(item => {
-        item.forEach(element => {
-            element.forEach(obstacle => {
-                obstacle.draw(ctx);
-            })
-        })
+    obstacleArrays.forEach(obstacle => {
+        obstacle.updatePosition();
+        obstacle.draw(ctx);
     })
 
 // Nächster Schritt der Animation
@@ -280,12 +278,8 @@ function startGame(difficultyLevel, ctx, canvas) {
             var obstacleArrays = createObstaclesHighLevel(ctx);
         }
         
-        obstacleArrays.forEach(item => {
-            item.forEach(element => {
-                element.forEach(obstacle => {
-                    obstacle.draw(ctx);
-                })
-            })
+        obstacleArrays.forEach(obstacle => {
+            obstacle.draw(ctx);                                                                             
         })
 
         window.addEventListener('keydown', function(){keyDown(event, playerRed, playerBlue)});
@@ -485,14 +479,11 @@ function createObstaclesLowLevel(ctx) {
     obstacle10.draw(ctx);
 
     // Eindimensionales Array mit allen Hindernissen (Kreise)
-    var obstacleArrayLeft = [obstacle1, obstacle2, obstacle3, obstacle4, obstacle5, 
+    var obstacleArray = [obstacle1, obstacle2, obstacle3, obstacle4, obstacle5, 
                              obstacle6, obstacle7, obstacle8, obstacle9, obstacle10];
 
-    // Finales, zweidimensionales Array erstellen
-    var obstacleArrays = [obstacleArrayLeft];
-
     // Finales Array zurückgeben
-    return obstacleArrays;
+    return obstacleArray;
 }
 
 /**
@@ -503,40 +494,41 @@ function createObstaclesLowLevel(ctx) {
 function createObstaclesHighLevel(ctx) {
     // Erstellen aller Hindernisse (Kreise)
     // False steht für die Richtung Rechts
-    let obstacle1 = new myObstacle(550, 390, 3, false);
-    let obstacle2 = new myObstacle(430, 250, 3, false);
-    let obstacle3 = new myObstacle(50, 320, 3, false);
-    let obstacle4 = new myObstacle(300, 380, 3, false);
-    let obstacle5 = new myObstacle(580, 210, 3, false);
-    let obstacle6 = new myObstacle(80, 300, 3, false);
-    let obstacle7 = new myObstacle(280, 230, 3, false);
-    let obstacle8 = new myObstacle(130, 140, 3, false);
-    let obstacle9 = new myObstacle(510, 110, 3, false);
-    let obstacle10 = new myObstacle(480, 280, 3, false);
+    let obstacle11 = new myObstacle(550, 390, 3, false);
+    let obstacle12 = new myObstacle(430, 250, 3, false);
+    let obstacle13 = new myObstacle(50, 320, 3, false);
+    let obstacle14 = new myObstacle(300, 380, 3, false);
+    let obstacle15 = new myObstacle(580, 210, 3, false);
+    let obstacle16 = new myObstacle(80, 300, 3, false);
+    let obstacle17 = new myObstacle(280, 230, 3, false);
+    let obstacle18 = new myObstacle(130, 140, 3, false);
+    let obstacle19 = new myObstacle(510, 110, 3, false);
+    let obstacle20 = new myObstacle(480, 280, 3, false);
 
     // Vorzeichnen aller Hindernisse (Kreise)
-    obstacle1.draw(ctx);
-    obstacle2.draw(ctx);
-    obstacle3.draw(ctx);
-    obstacle4.draw(ctx);
-    obstacle5.draw(ctx);
-    obstacle6.draw(ctx);
-    obstacle7.draw(ctx);
-    obstacle8.draw(ctx);
-    obstacle9.draw(ctx);
-    obstacle10.draw(ctx);
+    obstacle11.draw(ctx);
+    obstacle12.draw(ctx);
+    obstacle13.draw(ctx);
+    obstacle14.draw(ctx);
+    obstacle15.draw(ctx);
+    obstacle16.draw(ctx);
+    obstacle17.draw(ctx);
+    obstacle18.draw(ctx);
+    obstacle19.draw(ctx);
+    obstacle20.draw(ctx);
 
     // Eindimensionales Array mit allen Hindernissen (Kreise)
-    var obstacleArrayRight = [obstacle1, obstacle2, obstacle3, obstacle4, obstacle5, 
-                              obstacle6, obstacle7, obstacle8, obstacle9, obstacle10];
+    var obstacleArray = [obstacle11, obstacle12, obstacle13, obstacle14, obstacle15, 
+                         obstacle16, obstacle17, obstacle18, obstacle19, obstacle20];
     // Alle Hindernisse für die andere Richtung hohlen
-    var obstacleArrayLeft = createObstaclesLowLevel(ctx)
+    var obstacleArrayLowLevel = createObstaclesLowLevel(ctx)
 
-    // Finales, zweidimensionales Array erstellen
-    var obstacleArrays = [obstacleArrayLeft, obstacleArrayRight]
+    obstacleArrayLowLevel.forEach(element => {
+        obstacleArray.push(element)
+    })
 
     // Finales Array zurückgeben
-    return obstacleArrays;
+    return obstacleArray;
 }
 
 
