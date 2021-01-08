@@ -30,12 +30,15 @@ function startNewGame() {
     var canvas = document.getElementById("space-race");
     var ctx = canvas.getContext("2d");
 
+    // Zeichnen aller Buttons und Texte, bekommt alle Buttons zurück
     var buttons = drawGameStartPage(ctx, canvas);
 
+    // Eventlistener um Cursor Style anzupassen
     canvas.addEventListener("mousemove", function() {
         onMouseMove(event, buttons.easyButton, buttons.mediumButton, buttons.difficultButton,
             buttons.startButton, ctx, canvas)});
 
+    // Eventlistener um den Schwierigkeitsgrad zu setzten und das Spiel zu starten
     canvas.addEventListener("click", function() {
         setDifficulty(event, buttons.easyButton, buttons.mediumButton, 
             buttons.difficultButton, buttons.startButton, ctx, canvas)});
@@ -48,14 +51,17 @@ function startNewGame() {
  * @param canvas  // Canvas-Objekt zum Zeichnen
  */
 function drawGameStartPage(ctx, canvas) {
+    // Canvas leeren
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+    // Alle Texte erstellen und zeichnen
     var titleText = new myText("Space Race", "50px Raleway", 150, 100);
     titleText.draw(ctx);
 
     var difficultyText = new myText("Schwierigkeitsgrad", "30px Raleway", 150, 150);
     difficultyText.draw(ctx);
 
+    // Alle Buttons und zueghörige Texte erstellen und zeichnen
     var easyButton = new myButton(50, 200, 150, 40, 2, "#000");
     easyButton.draw(ctx,'#000');
     var easyText = new myText("Leicht", "24px Raleway", 90, 230);
@@ -86,14 +92,14 @@ function drawGameStartPage(ctx, canvas) {
 }
 
 /**
- * Funktion für Mouseover-Animation
- * @param e                 // Event um die Mausposition zu erhalten 
+ * Funktion für Mouseover-Animation zur Anpassung des Cursors
+ * @param e                 // Event um die Mausposition zu ermitteln 
  * @param easyButton        // Buttonobjekt für die Schwierigkeitsstufe "Leicht"  
  * @param mediumButton      // Buttonobjekt für die Schwierigkeitsstufe "Mittel"
  * @param difficultButton   // Buttonobjekt für die Schwierigkeitsstufe "Schwierig"
  * @param startButton       // Buttonobjekt um das Spiel zu starten
- * @param ctx               // Canvas Context zur Weitergabe
- * @param canvas            // Canvas Objekt zur Weitergabe
+ * @param ctx               // Canvas Context wird benötigt um cursor anzupassen -> funktioniert nicht ohne
+ * @param canvas            // Canvas Objekt um den Cursor anzupassen
  */
 function onMouseMove(e, easyButton, mediumButton, difficultButton, startButton, ctx, canvas) {
 
@@ -157,6 +163,7 @@ function setDifficulty(e, easyButton, mediumButton, difficultButton, startButton
                mouseY > mediumButton.y && mouseY < mediumButton.y + mediumButton.height) {
         // Schwierigkeitsstufe setzen
         difficultyLevel = medium;
+        // Gewählten Button farblich abheben
         easyButton.strokeStyle = '#000';
         mediumButton.strokeStyle = '#f00';
         difficultButton.strokeStyle = '#000';
@@ -167,6 +174,7 @@ function setDifficulty(e, easyButton, mediumButton, difficultButton, startButton
                mouseY > difficultButton.y && mouseY < difficultButton.y + difficultButton.height) {
         // Schwierigkeitsstufe setzen
         difficultyLevel = difficult;
+        // Gewählten Button farblich abheben
         easyButton.strokeStyle = '#000';
         mediumButton.strokeStyle = '#000';
         difficultButton.strokeStyle = '#f00';
@@ -185,6 +193,7 @@ function setDifficulty(e, easyButton, mediumButton, difficultButton, startButton
     } else {
         // Schwierigkeitsstufe setzen
         difficultyLevel = none;
+        // Farbe aller Buttons zurücksetzten
         easyButton.strokeStyle = '#000';
         mediumButton.strokeStyle = '#000';
         difficultButton.strokeStyle = '#000';

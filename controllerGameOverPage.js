@@ -5,15 +5,23 @@ die Weiterleitung zur Game Over Seite.
 08.01.2021, Alessia Siegrist und Tanja Wyder
 */
 
-/**
- * 
- * @param canvas        //  Canvas-Objekt zum Zeichnen
- * @param ctx           //  Canvas-Context zum Zeichnen
- * @param playerRed     //  Player-Objekt für Player Red
- * @param playerBlue    //  Player-Objekt für Player Blue
- * @param gameOver      //  Spielstatus
- */
-function showFrame(canvas, ctx, playerRed, playerBlue, scorePlayerRedText, scorePlayerBlueText, livesPlayerRedText, livesPlayerBlueText, heartPlayerRed, heartPlayerBlue, obstacleArrays, gameOver, startTime, actualTime) {
+ /**
+  * Jedes einzelne Frame erstellen und zeichnen, ruft sich selbst rekursiv auf
+  * @param canvas               // Canvas-Objekt zum Zeichnen
+  * @param ctx                  // Canvas-Context zum Zeichnen
+  * @param playerRed            // Player-Objekt für Player Red
+  * @param playerBlue           // Player-Objekt für Player Blue
+  * @param scorePlayerRedText   // Text Objekt für Score des Player Red
+  * @param scorePlayerBlueText  // Text Objekt für Score des Player Red
+  * @param livesPlayerRedText   // Text Objekt für Leben des Player Red
+  * @param livesPlayerBlueText  // Text Objekt für Leben des Player Blue
+  * @param heartPlayerRed       // Herz Objekt des Player Red
+  * @param heartPlayerBlue      // Herz Objekt des Player Blue
+  * @param obstacleArrays       // Hindernis Array    
+  * @param gameOver             // Game Over Boolean
+  * @param startTime            // Startzeitpunkt des Spiels
+  */
+function showFrame(canvas, ctx, playerRed, playerBlue, scorePlayerRedText, scorePlayerBlueText, livesPlayerRedText, livesPlayerBlueText, heartPlayerRed, heartPlayerBlue, obstacleArrays, gameOver, startTime) {
 
     checkCollision(obstacleArrays, playerRed, playerBlue);
     // Positionen der Player prüfen und aktualisieren
@@ -68,6 +76,7 @@ function showFrame(canvas, ctx, playerRed, playerBlue, scorePlayerRedText, score
             var loser = playerBlue;
         }
 
+        // Game Over Seite zeichnen
         drawGameOverPage(canvas, ctx, winner, loser);
     } else {
         // Nächster Schritt der Animation
@@ -90,9 +99,9 @@ function increaseObstacleSpeed(obstacleArray) {
 
 /**
  * Funktion, um ein neues Spiel zu starten
- * @param {*} difficultyLevel 
- * @param {*} ctx 
- * @param {*} canvas 
+ * @param  difficultyLevel  // Schwierigkeitsgrad
+ * @param  ctx              // Canvas Context
+ * @param  canvas           // Canvas Objekt
  */
 function startGame(difficultyLevel, ctx, canvas) {
 
@@ -184,15 +193,24 @@ function checkCollision(obstacleArray, playerRed, playerBlue){
   */
 function drawGameObjects(ctx, playerRed, playerBlue, livesPlayerRedText, livesPlayerBlueText, 
     heartPlayerRed, heartPlayerBlue, scorePlayerRedText, scorePlayerBlueText) {
-
+    
+    // Spieler zeichnen
     playerRed.draw(ctx);
     playerBlue.draw(ctx);
+
+    // Texte zeichnen Leben
     livesPlayerRedText.drawUpdatedText(ctx, playerRed.lives);
     livesPlayerBlueText.drawUpdatedText(ctx, playerBlue.lives);
+
+    // Herzen zeichnen
     heartPlayerRed.draw(ctx);
     heartPlayerBlue.draw(ctx);
+
+    // Texte zeichen Score
     scorePlayerRedText.drawUpdatedText(ctx, playerRed.score);
     scorePlayerBlueText.drawUpdatedText(ctx, playerBlue.score);
+
+    // Devider zeichnen
     drawDivider(ctx);
 
 }
@@ -341,6 +359,7 @@ function createObstaclesHighLevel(ctx) {
     // Alle Hindernisse für die andere Richtung holen
     var obstacleArrayLowLevel = createObstaclesLowLevel(ctx)
 
+    // Alle Hindernisse des Low Level Arrays dem obstacleArray hinzufügen
     obstacleArrayLowLevel.forEach(element => {
         obstacleArray.push(element)
     })

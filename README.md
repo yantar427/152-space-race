@@ -19,3 +19,5 @@ Es gibt drei verschiedene Schwierigkeitsgrade:
 - Schwierig: Zwei Sets von Hindernissen wie bei Schwierigkeitsgrad Mittel, zusätzlich erhöht sich die Geschwindigkeit im Intervall von 20 Sekunden
 
 Den Schwierigkeitsgrad wählt man vor Beginn des Spiels.
+
+GitHub Repository: https://github.com/yantar427/152-space-race
