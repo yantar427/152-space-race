@@ -167,6 +167,8 @@ class smallHeart {
 
 /**
  * Klass zum erstellen der Hindernisse (Kreis)
+ * Das Attribut direction beinhaltet einen boolean wecher
+ * die Richtung bestimmt -> True = Links und False = Rechts
  */
 class myObstacle {
     constructor(x, y, r, direction) {
@@ -190,5 +192,33 @@ class myObstacle {
         ctx.fillStyle = this.style;
         ctx.stroke();
         ctx.fill();
+    }
+
+    // Startposition anpassen sobald der Rand vom Canvas erreicht wurde
+    startPosition() {
+        if (this.direction) {
+            // Links
+            this.x = 0;
+        } else {
+            // Rechts
+            this.x = 600;
+        }
+    }
+
+    // Verschieben der Position anhand der direction
+    updatePosition() {
+        if (this.direction) {
+            if (this.x > 0 && this.x < 600) {
+                this.x--;
+            } else {
+                this.startPosition();
+            }
+        } else {
+            if (this.x > 0 && this.x < 600) {
+                this.x++;
+            } else {
+                this.startPosition();
+            }
+        }
     }
 }
