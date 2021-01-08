@@ -205,16 +205,16 @@ class myObstacle {
     }
 
     // Verschieben der Position anhand der direction
-    updatePosition() {
+    updatePosition(speed) {
         if (this.direction) {
             if (this.x > -4 && this.x < 604) {
-                this.x--;
+                this.x = this.x - speed;
             } else {
                 this.startPosition();
             }
         } else {
             if (this.x > -4 && this.x < 604) {
-                this.x++;
+                this.x = this.x + speed;
             } else {
                 this.startPosition();
             }

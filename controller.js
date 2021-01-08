@@ -3,8 +3,10 @@ Modul 152, LB - Space Race
 08.01.2021, Alessia Siegrist und Tanja Wyder
 */
 
-// Konstante für das Game Over Flag setzten
-const gameOver = false;
+// Variable für das Game Over Flag setzten
+var gameOver = false;
+var speed = 1;
+
 // Konstanten für die Angabe zur aktuellen Seite
 const pageOne = 1;
 const pageTwo = 2;
@@ -30,10 +32,7 @@ window.onload = function() { startNewGame(); }
  * @param playerBlue    //  Player-Objekt für Player Blue
  * @param gameOver      //  Spielstatus
  */
-function showFrame(canvas, ctx, playerRed, playerBlue, scorePlayerRedText, scorePlayerBlueText, livesPlayerRedText, livesPlayerBlueText, heartPlayerRed, heartPlayerBlue, obstacleArrays, gameOver) {
-    // if(gameOver){
-    //     return;
-    // }
+function showFrame(canvas, ctx, playerRed, playerBlue, scorePlayerRedText, scorePlayerBlueText, livesPlayerRedText, livesPlayerBlueText, heartPlayerRed, heartPlayerBlue, obstacleArrays, gameOver, startTime, actualTime) {
 
     checkCollision(obstacleArrays, playerRed, playerBlue);
     // Positionen der Player prüfen und aktualisieren
@@ -49,13 +48,58 @@ function showFrame(canvas, ctx, playerRed, playerBlue, scorePlayerRedText, score
 
     // Alle Hindernisse zeichnen
     obstacleArrays.forEach(obstacle => {
-        obstacle.updatePosition();
+        obstacle.updatePosition(speed);
         obstacle.draw(ctx);
     })
+    var currentTime = new Date();
 
-// Nächster Schritt der Animation
-    window.requestAnimationFrame(function(actualTime){
-        showFrame(canvas, ctx, playerRed, playerBlue, scorePlayerRedText, scorePlayerBlueText, livesPlayerRedText, livesPlayerBlueText, heartPlayerRed, heartPlayerBlue, obstacleArrays, gameOver);
+    if (difficultyLevel == difficult) {
+        console.log(startTime);
+        console.log(startTime.setSeconds(startTime.getSeconds() + 3))
+
+        if (startTime.setSeconds(startTime.getSeconds() + 3) === currentTime) {
+            console.log("drin");
+            increaseObstacleSpeed(obstacleArrays);
+            startTime = startTime + 3;
+        }
+    }
+
+    // Anhand der zur Verfügung stehenden Leben überprüfen ob das Spiel vorbei ist
+    if (playerBlue.lives <= 0 || playerRed.lives <= 0) {
+        gameOver = true;
+    }
+    
+    // Wenn das Spiel vorbei ist
+    if(gameOver){
+        // Abfrage welcher Spieler gewonnen hat
+        if (playerBlue.score > playerRed.score) {
+            var winner = playerBlue;
+            var loser = playerRed;
+        } else if (playerBlue.score == playerRed.score) {
+            if (playerBlue.lives > playerRed.lives) {
+                var winner = playerBlue;
+                var loser = playerRed;
+            } else {
+                var winner = playerRed;
+                var loser = playerBlue;
+            }
+        } else {
+            var winner = playerRed;
+            var loser = playerBlue;
+        }
+
+        drawGameOverPage(canvas, ctx, winner, loser);
+    } else {
+        // Nächster Schritt der Animation
+        window.requestAnimationFrame(function(actualTime){
+            showFrame(canvas, ctx, playerRed, playerBlue, scorePlayerRedText, scorePlayerBlueText, livesPlayerRedText, livesPlayerBlueText, heartPlayerRed, heartPlayerBlue, obstacleArrays, gameOver, startTime, actualTime);
+        })
+    }
+}
+
+function increaseObstacleSpeed(obstacleArray) {
+    obstacleArray.forEach(obstacle => {
+        obstacle.updatePosition(1);
     })
 }
 
@@ -179,9 +223,9 @@ function onMouseMove(e, easyButton, mediumButton, difficultButton, startButton, 
  * Funktion zum Setzen des Schwierigkeitsgrads und für das Starten des Spiels, sofern ein 
  * Schwierigkeitsgrad gesetzt ist
  * @param e                 // Event um die Mausposition zu erhalten 
- * @param easyButton        // Buttonobjekt für die Schwierigkeitsstufe "Leicht"  
- * @param mediumButton      // Buttonobjekt für die Schwierigkeitsstufe "Mittel"
- * @param difficultButton   // Buttonobjekt für die Schwierigkeitsstufe "Schwierig"
+ * @param easyButton        // Buttonobjekt für die Schwierigkeitsgrad "Leicht"  
+ * @param mediumButton      // Buttonobjekt für die Schwierigkeitsgrad "Mittel"
+ * @param difficultButton   // Buttonobjekt für die Schwierigkeitsgrad "Schwierig"
  * @param startButton       // Buttonobjekt um das Spiel zu starten
  * @param ctx               // Canvas Context zur Weitergabe
  * @param canvas            // Canvas Objekt zur Weitergabe
@@ -251,33 +295,39 @@ function startGame(difficultyLevel, ctx, canvas) {
     ctx.clearRect(0,0,canvas.width,canvas.height);
 
     window.requestAnimationFrame(function(actualTime){
+        let startTime = new Date();
 
+        // Canvas Style anpassen
         changeStyle(pageTwo, canvas);
-
-        let startTime = actualTime;
-    
+            
+        // Spieler Objekte erstellen
         let playerRed = new myPlayer(150, 450, '#f00', 'Player Red');
         let playerBlue = new myPlayer(430, 450, '#00f', 'Player Blue');
 
+        // Spieler Leben Text Objekt erstellen
         var livesPlayerRedText = new myText(playerRed.lives, "30px Raleway", 20, 40, '#fff');
         var livesPlayerBlueText = new myText(playerBlue.lives, "30px Raleway", 530, 40, '#fff');
 
+        // Herz Objekte erstellen
         let heartPlayerRed = new smallHeart(50, 30);
         let heartPlayerBlue = new smallHeart(560, 30);
 
+        // Spieler Punktzahl Text Objekt erstellen
         var scorePlayerRedText = new myText(playerRed.score, "72px Raleway", 50, 480, '#fff');
         var scorePlayerBlueText = new myText(playerBlue.score, "72px Raleway", 500, 480, '#fff');
 
-        // Spieler-Objekte zeichnen
-        drawGameObjects(ctx, playerRed, playerBlue, livesPlayerRedText, livesPlayerBlueText, 
-            heartPlayerRed, heartPlayerBlue, scorePlayerRedText, scorePlayerBlueText)
-
+        // Anhand des Schwierigkeitsgrad Hindernisse (Kreise) erstellen
         if (difficultyLevel==easy) {
             var obstacleArrays = createObstaclesLowLevel(ctx);
         } else {
             var obstacleArrays = createObstaclesHighLevel(ctx);
         }
+
+        // Spieler-Objekte zeichnen
+        drawGameObjects(ctx, playerRed, playerBlue, livesPlayerRedText, livesPlayerBlueText, 
+            heartPlayerRed, heartPlayerBlue, scorePlayerRedText, scorePlayerBlueText)
         
+        // Hindernisse (Kreise) zeichnen
         obstacleArrays.forEach(obstacle => {
             obstacle.draw(ctx);                                                                             
         })
@@ -285,9 +335,10 @@ function startGame(difficultyLevel, ctx, canvas) {
         window.addEventListener('keydown', function(){keyDown(event, playerRed, playerBlue)});
         window.addEventListener('keyup', function(){keyUp(event, playerRed, playerBlue)});
 
-        showFrame(canvas, ctx, playerRed, playerBlue, scorePlayerRedText, scorePlayerBlueText, livesPlayerRedText, livesPlayerBlueText, heartPlayerRed, heartPlayerBlue, obstacleArrays, gameOver);
+        showFrame(canvas, ctx, playerRed, playerBlue, scorePlayerRedText, scorePlayerBlueText, 
+            livesPlayerRedText, livesPlayerBlueText, heartPlayerRed, heartPlayerBlue, 
+            obstacleArrays, gameOver, startTime, actualTime);
     });
-
 }
 
 /**
@@ -320,7 +371,12 @@ function checkCollision(obstacleArray, playerRed, playerBlue){
  * @param winner    // Spieler-Objekt des Gewinners für die Score anzeigen
  * @param loser     // Spieler-Objekt des Verlierers für die Score anzeigen
  */
-function drawGameOverPage(ctx, winner, loser) {
+function drawGameOverPage(canvas, ctx, winner, loser) {
+    // Canvas leeren um die Game Over Seite zu zeichnen
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    changeStyle(pageThree, canvas);
+
     var gameOverText = new myText("Game Over", "50px Raleway", 160, 100);
     gameOverText.draw(ctx);
 
@@ -339,8 +395,10 @@ function drawGameOverPage(ctx, winner, loser) {
     var newGameText = new myText("Neues Spiel", "28px Raleway", 218, 390);
     newGameText.draw(ctx);
 
-    // Rückgabe des Buttons, um ein neues Spiel zu starten
-    return newGameButton;
+    canvas.addEventListener("click", function() {
+        newGameButton(event, newGameButton);
+    });
+
  }
 
  /**
