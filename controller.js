@@ -168,7 +168,7 @@ function setDifficulty(e, easyButton, mediumButton, difficultButton, startButton
             // Check ob eine Schwierigkeitsstufe gesetzt ist
             // Wenn keine gesetzt wurde, Warnung ausgeben, sonst Spiel starten
             if (difficultyLevel==none) {
-                alert("Bitte wählen Sie einen Schwierigkeitsgrad!")
+                alert("Bitte wählen Sie einen Schwierigkeitsgrad!");
             } else {
                 startGame(difficultyLevel, ctx, canvas);
             }
@@ -308,7 +308,7 @@ function drawDivider(ctx){
     ctx.lineWidth = '2';
     ctx.beginPath();
     ctx.moveTo(300, 500);
-    ctx.lineTo(300, 400);
+    ctx.lineTo(300, 420);
     ctx.closePath();
     ctx.stroke();
 }
@@ -375,11 +375,11 @@ function keyUp(event, playerRed, playerBlue) {
 function createObstaclesLowLevel(ctx) {
     // Erstellen aller Hindernisse (Kreise)
     // True steht für die Richtung Links
-    let obstacle1 = new myObstacle(500, 50, 3, true);
+    let obstacle1 = new myObstacle(470, 70, 3, true);
     let obstacle2 = new myObstacle(150, 200, 3, true);
     let obstacle3 = new myObstacle(50, 100, 3, true);
     let obstacle4 = new myObstacle(250, 300, 3, true);
-    let obstacle5 = new myObstacle(150, 410, 3, true);
+    let obstacle5 = new myObstacle(150, 370, 3, true);
     let obstacle6 = new myObstacle(450, 340, 3, true);
     let obstacle7 = new myObstacle(310, 270, 3, true);
     let obstacle8 = new myObstacle(240, 90, 3, true);
@@ -417,10 +417,10 @@ function createObstaclesLowLevel(ctx) {
 function createObstaclesHighLevel(ctx) {
     // Erstellen aller Hindernisse (Kreise)
     // False steht für die Richtung Rechts
-    let obstacle1 = new myObstacle(550, 400, 3, false);
+    let obstacle1 = new myObstacle(550, 390, 3, false);
     let obstacle2 = new myObstacle(430, 250, 3, false);
     let obstacle3 = new myObstacle(50, 320, 3, false);
-    let obstacle4 = new myObstacle(300, 420, 3, false);
+    let obstacle4 = new myObstacle(300, 380, 3, false);
     let obstacle5 = new myObstacle(580, 210, 3, false);
     let obstacle6 = new myObstacle(80, 300, 3, false);
     let obstacle7 = new myObstacle(280, 230, 3, false);
