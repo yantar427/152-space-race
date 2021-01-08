@@ -178,12 +178,12 @@ function onMouseMove(e, easyButton, mediumButton, difficultButton, startButton, 
 }
 
 /**
- * Funktion zum Setzen des Schwirigkeitsgrads und für das Starten des Spiels, sofern ein 
+ * Funktion zum Setzen des Schwierigkeitsgrads und für das Starten des Spiels, sofern ein 
  * Schwierigkeitsgrad gesetzt ist
  * @param e                 // Event um die Mausposition zu erhalten 
- * @param easyButton        // Buttonobjekt für die Schwierigkeitsstuffe "Leicht"  
- * @param mediumButton      // Buttonobjekt für die Schwierigkeitsstuffe "Mittel"
- * @param difficultButton   // Buttonobjekt für die Schwierigkeitsstuffe "Schwierig"
+ * @param easyButton        // Buttonobjekt für die Schwierigkeitsstufe "Leicht"  
+ * @param mediumButton      // Buttonobjekt für die Schwierigkeitsstufe "Mittel"
+ * @param difficultButton   // Buttonobjekt für die Schwierigkeitsstufe "Schwierig"
  * @param startButton       // Buttonobjekt um das Spiel zu starten
  * @param ctx               // Canvas Context zur Weitergabe
  * @param canvas            // Canvas Objekt zur Weitergabe
@@ -250,6 +250,8 @@ function setDifficulty(e, easyButton, mediumButton, difficultButton, startButton
 
 function startGame(difficultyLevel, ctx, canvas) {
 
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+
     window.requestAnimationFrame(function(actualTime){
 
         changeStyle(pageTwo, canvas);
@@ -292,6 +294,20 @@ function startGame(difficultyLevel, ctx, canvas) {
         showFrame(canvas, ctx, playerRed, playerBlue, scorePlayerRedText, scorePlayerBlueText, livesPlayerRedText, livesPlayerBlueText, heartPlayerRed, heartPlayerBlue, obstacleArrays, gameOver);
     });
 
+}
+
+function checkCollision(obstacleArray){
+    for (obstacle in obstacleArray) {
+        if (obstacle.x >= playerRed.x && obstacle.x <= playerRed.x + playerRed.width &&
+            obstacle.y >= playerRed.y && obstacle.y <= playerRed.y + playerRed.height) {
+            playerRed.lives--;
+            playerRed.startPosition();
+        } else if(obstacle.x >= playerBlue.x && obstacle.x <= playerBlue.x + playerBlue.width &&
+            obstacle.y >= playerBlue.y && obstacle.y <= playerBlue.y + playerBlue.height) {
+            playerBlue.lives--;
+            playerBlue.startPosition();
+        }
+    }
 }
 
 /**
@@ -522,3 +538,5 @@ function createObstaclesHighLevel(ctx) {
     // Finales Array zurückgeben
     return obstacleArrays;
 }
+
+
