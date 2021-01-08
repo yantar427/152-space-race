@@ -3,8 +3,10 @@ Modul 152, LB - Space Race
 08.01.2021, Alessia Siegrist und Tanja Wyder
 */
 
-// Konstante für das Game Over Flag setzten
-const gameOver = false;
+// Variable für das Game Over Flag setzten
+var gameOver = false;
+var speed = 1;
+
 // Konstanten für die Angabe zur aktuellen Seite
 const pageOne = 1;
 const pageTwo = 2;
@@ -30,17 +32,45 @@ window.onload = function() { startNewGame(); }
  * @param playerBlue    //  Player-Objekt für Player Blue
  * @param gameOver      //  Spielstatus
  */
-function showFrame(canvas, ctx, playerRed, playerBlue, scorePlayerRedText, scorePlayerBlueText, livesPlayerRedText, livesPlayerBlueText, heartPlayerRed, heartPlayerBlue, obstacleArrays, gameOver) {
+function showFrame(canvas, ctx, playerRed, playerBlue, scorePlayerRedText, scorePlayerBlueText, livesPlayerRedText, livesPlayerBlueText, heartPlayerRed, heartPlayerBlue, obstacleArrays, gameOver, startTime, actualTime) {
+
+    checkCollision(obstacleArrays, playerRed, playerBlue);
+    // Positionen der Player prüfen und aktualisieren
+    playerRed.updatePosition();
+    playerBlue.updatePosition();
+
+    // Canvas löschen
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+   
+    // Spieler-Objekte neu zeichnen
+    drawGameObjects(ctx, playerRed, playerBlue, livesPlayerRedText, livesPlayerBlueText, 
+        heartPlayerRed, heartPlayerBlue, scorePlayerRedText, scorePlayerBlueText);
+
+    // Alle Hindernisse zeichnen
+    obstacleArrays.forEach(obstacle => {
+        obstacle.updatePosition(speed);
+        obstacle.draw(ctx);
+    })
+    var currentTime = new Date();
+
+    if (difficultyLevel == difficult) {
+        console.log(startTime);
+        console.log(startTime.setSeconds(startTime.getSeconds() + 3))
+
+        if (startTime.setSeconds(startTime.getSeconds() + 3) === currentTime) {
+            console.log("drin");
+            increaseObstacleSpeed(obstacleArrays);
+            startTime = startTime + 3;
+        }
+    }
+
     // Anhand der zur Verfügung stehenden Leben überprüfen ob das Spiel vorbei ist
-    if (playerBlue.lives == 0 || playerRed.lives == 0) {
+    if (playerBlue.lives <= 0 || playerRed.lives <= 0) {
         gameOver = true;
     }
     
     // Wenn das Spiel vorbei ist
     if(gameOver){
-        // Canvas leeren um die Game Over Seite zu zeichnen
-        ctx.clearRect(0, 0 , canvas.width, canvas.height);
-
         // Abfrage welcher Spieler gewonnen hat
         if (playerBlue.score > playerRed.score) {
             var winner = playerBlue;
@@ -58,31 +88,18 @@ function showFrame(canvas, ctx, playerRed, playerBlue, scorePlayerRedText, score
             var loser = playerBlue;
         }
 
-        // Game Over Seite zeichnen
-        drawGameOverPage(ctx, winner, loser);
+        drawGameOverPage(canvas, ctx, winner, loser);
+    } else {
+        // Nächster Schritt der Animation
+        window.requestAnimationFrame(function(actualTime){
+            showFrame(canvas, ctx, playerRed, playerBlue, scorePlayerRedText, scorePlayerBlueText, livesPlayerRedText, livesPlayerBlueText, heartPlayerRed, heartPlayerBlue, obstacleArrays, gameOver, startTime, actualTime);
+        })
     }
+}
 
-    checkCollision(obstacleArrays, playerRed, playerBlue);
-    // Positionen der Player prüfen und aktualisieren
-    playerRed.updatePosition();
-    playerBlue.updatePosition();
-
-    // Canvas löschen
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-   
-    // Spieler-Objekte neu zeichnen
-    drawGameObjects(ctx, playerRed, playerBlue, livesPlayerRedText, livesPlayerBlueText, 
-        heartPlayerRed, heartPlayerBlue, scorePlayerRedText, scorePlayerBlueText);
-
-    // Alle Hindernisse zeichnen
-    obstacleArrays.forEach(obstacle => {
-        obstacle.updatePosition();
-        obstacle.draw(ctx);
-    })
-
-// Nächster Schritt der Animation
-    window.requestAnimationFrame(function(actualTime){
-        showFrame(canvas, ctx, playerRed, playerBlue, scorePlayerRedText, scorePlayerBlueText, livesPlayerRedText, livesPlayerBlueText, heartPlayerRed, heartPlayerBlue, obstacleArrays, gameOver);
+function increaseObstacleSpeed(obstacleArray) {
+    obstacleArray.forEach(obstacle => {
+        obstacle.updatePosition(1);
     })
 }
 
@@ -278,7 +295,7 @@ function startGame(difficultyLevel, ctx, canvas) {
     ctx.clearRect(0,0,canvas.width,canvas.height);
 
     window.requestAnimationFrame(function(actualTime){
-        let startTime = actualTime;
+        let startTime = new Date();
 
         // Canvas Style anpassen
         changeStyle(pageTwo, canvas);
@@ -318,9 +335,10 @@ function startGame(difficultyLevel, ctx, canvas) {
         window.addEventListener('keydown', function(){keyDown(event, playerRed, playerBlue)});
         window.addEventListener('keyup', function(){keyUp(event, playerRed, playerBlue)});
 
-        showFrame(canvas, ctx, playerRed, playerBlue, scorePlayerRedText, scorePlayerBlueText, livesPlayerRedText, livesPlayerBlueText, heartPlayerRed, heartPlayerBlue, obstacleArrays, gameOver);
+        showFrame(canvas, ctx, playerRed, playerBlue, scorePlayerRedText, scorePlayerBlueText, 
+            livesPlayerRedText, livesPlayerBlueText, heartPlayerRed, heartPlayerBlue, 
+            obstacleArrays, gameOver, startTime, actualTime);
     });
-
 }
 
 /**
@@ -353,7 +371,12 @@ function checkCollision(obstacleArray, playerRed, playerBlue){
  * @param winner    // Spieler-Objekt des Gewinners für die Score anzeigen
  * @param loser     // Spieler-Objekt des Verlierers für die Score anzeigen
  */
-function drawGameOverPage(ctx, winner, loser) {
+function drawGameOverPage(canvas, ctx, winner, loser) {
+    // Canvas leeren um die Game Over Seite zu zeichnen
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    changeStyle(pageThree, canvas);
+
     var gameOverText = new myText("Game Over", "50px Raleway", 160, 100);
     gameOverText.draw(ctx);
 
@@ -372,8 +395,10 @@ function drawGameOverPage(ctx, winner, loser) {
     var newGameText = new myText("Neues Spiel", "28px Raleway", 218, 390);
     newGameText.draw(ctx);
 
-    // Rückgabe des Buttons, um ein neues Spiel zu starten
-    return newGameButton;
+    canvas.addEventListener("click", function() {
+        newGameButton(event, newGameButton);
+    });
+
  }
 
  /**
