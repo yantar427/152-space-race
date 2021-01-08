@@ -31,9 +31,36 @@ window.onload = function() { startNewGame(); }
  * @param gameOver      //  Spielstatus
  */
 function showFrame(canvas, ctx, playerRed, playerBlue, scorePlayerRedText, scorePlayerBlueText, livesPlayerRedText, livesPlayerBlueText, heartPlayerRed, heartPlayerBlue, obstacleArrays, gameOver) {
-    // if(gameOver){
-    //     return;
-    // }
+    // Anhand der zur Verfügung stehenden Leben überprüfen ob das Spiel vorbei ist
+    if (playerBlue.lives == 0 || playerRed.lives == 0) {
+        gameOver = true;
+    }
+    
+    // Wenn das Spiel vorbei ist
+    if(gameOver){
+        // Canvas leeren um die Game Over Seite zu zeichnen
+        ctx.clearRect(0, 0 , canvas.width, canvas.height);
+
+        // Abfrage welcher Spieler gewonnen hat
+        if (playerBlue.score > playerRed.score) {
+            var winner = playerBlue;
+            var loser = playerRed;
+        } else if (playerBlue.score == playerRed.score) {
+            if (playerBlue.lives > playerRed.lives) {
+                var winner = playerBlue;
+                var loser = playerRed;
+            } else {
+                var winner = playerRed;
+                var loser = playerBlue;
+            }
+        } else {
+            var winner = playerRed;
+            var loser = playerBlue;
+        }
+
+        // Game Over Seite zeichnen
+        drawGameOverPage(ctx, winner, loser);
+    }
 
     checkCollision(obstacleArrays, playerRed, playerBlue);
     // Positionen der Player prüfen und aktualisieren
@@ -179,9 +206,9 @@ function onMouseMove(e, easyButton, mediumButton, difficultButton, startButton, 
  * Funktion zum Setzen des Schwierigkeitsgrads und für das Starten des Spiels, sofern ein 
  * Schwierigkeitsgrad gesetzt ist
  * @param e                 // Event um die Mausposition zu erhalten 
- * @param easyButton        // Buttonobjekt für die Schwierigkeitsstufe "Leicht"  
- * @param mediumButton      // Buttonobjekt für die Schwierigkeitsstufe "Mittel"
- * @param difficultButton   // Buttonobjekt für die Schwierigkeitsstufe "Schwierig"
+ * @param easyButton        // Buttonobjekt für die Schwierigkeitsgrad "Leicht"  
+ * @param mediumButton      // Buttonobjekt für die Schwierigkeitsgrad "Mittel"
+ * @param difficultButton   // Buttonobjekt für die Schwierigkeitsgrad "Schwierig"
  * @param startButton       // Buttonobjekt um das Spiel zu starten
  * @param ctx               // Canvas Context zur Weitergabe
  * @param canvas            // Canvas Objekt zur Weitergabe
@@ -251,33 +278,39 @@ function startGame(difficultyLevel, ctx, canvas) {
     ctx.clearRect(0,0,canvas.width,canvas.height);
 
     window.requestAnimationFrame(function(actualTime){
-
-        changeStyle(pageTwo, canvas);
-
         let startTime = actualTime;
-    
+
+        // Canvas Style anpassen
+        changeStyle(pageTwo, canvas);
+            
+        // Spieler Objekte erstellen
         let playerRed = new myPlayer(150, 450, '#f00', 'Player Red');
         let playerBlue = new myPlayer(430, 450, '#00f', 'Player Blue');
 
+        // Spieler Leben Text Objekt erstellen
         var livesPlayerRedText = new myText(playerRed.lives, "30px Raleway", 20, 40, '#fff');
         var livesPlayerBlueText = new myText(playerBlue.lives, "30px Raleway", 530, 40, '#fff');
 
+        // Herz Objekte erstellen
         let heartPlayerRed = new smallHeart(50, 30);
         let heartPlayerBlue = new smallHeart(560, 30);
 
+        // Spieler Punktzahl Text Objekt erstellen
         var scorePlayerRedText = new myText(playerRed.score, "72px Raleway", 50, 480, '#fff');
         var scorePlayerBlueText = new myText(playerBlue.score, "72px Raleway", 500, 480, '#fff');
 
-        // Spieler-Objekte zeichnen
-        drawGameObjects(ctx, playerRed, playerBlue, livesPlayerRedText, livesPlayerBlueText, 
-            heartPlayerRed, heartPlayerBlue, scorePlayerRedText, scorePlayerBlueText)
-
+        // Anhand des Schwierigkeitsgrad Hindernisse (Kreise) erstellen
         if (difficultyLevel==easy) {
             var obstacleArrays = createObstaclesLowLevel(ctx);
         } else {
             var obstacleArrays = createObstaclesHighLevel(ctx);
         }
+
+        // Spieler-Objekte zeichnen
+        drawGameObjects(ctx, playerRed, playerBlue, livesPlayerRedText, livesPlayerBlueText, 
+            heartPlayerRed, heartPlayerBlue, scorePlayerRedText, scorePlayerBlueText)
         
+        // Hindernisse (Kreise) zeichnen
         obstacleArrays.forEach(obstacle => {
             obstacle.draw(ctx);                                                                             
         })
