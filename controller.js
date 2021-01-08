@@ -40,7 +40,6 @@ function showFrame(canvas, ctx, playerRed, playerBlue, scorePlayerRedText, score
     playerRed.updatePosition();
     playerBlue.updatePosition();
 
-
     // Canvas löschen
     ctx.clearRect(0, 0, canvas.width, canvas.height);
    
@@ -291,18 +290,28 @@ function startGame(difficultyLevel, ctx, canvas) {
 
 }
 
+/**
+ * Funktion, die prüft, ob ein Spieler mit einem Hindernis kollidiert. Im Kollisionsfall
+ * wird die Anzahl Leben um 1 vermindert und das Spieler-Objekt in die Startposition
+ * zurückversetzt.
+ * @param obstacleArray     // Array mit allen Hindernissen
+ * @param playerRed         // Spieler-Objekt
+ * @param playerBlue        // Spieler-Objekt
+ */
 function checkCollision(obstacleArray, playerRed, playerBlue){
-    for (obstacle in obstacleArray) {
+    obstacleArray.forEach(obstacle => {
+        // Kollision mit Player Red?
         if (obstacle.x >= playerRed.x && obstacle.x <= playerRed.x + playerRed.width &&
             obstacle.y >= playerRed.y && obstacle.y <= playerRed.y + playerRed.height) {
             playerRed.lives--;
             playerRed.startPosition();
+        // Kollision mit Player Blue?
         } else if(obstacle.x >= playerBlue.x && obstacle.x <= playerBlue.x + playerBlue.width &&
             obstacle.y >= playerBlue.y && obstacle.y <= playerBlue.y + playerBlue.height) {
             playerBlue.lives--;
             playerBlue.startPosition();
         }
-    }
+    })
 }
 
 /**

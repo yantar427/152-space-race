@@ -120,7 +120,6 @@ class myPlayer {
         // Oberer Spielrand wird erreicht
         if(this.y <= 0){
             this.score ++;
-            console.log("Score " + this.name + ": " + this.score);
             this.startPosition();
         }
     }
@@ -209,18 +208,14 @@ class myObstacle {
     updatePosition() {
         if (this.direction) {
             if (this.x > -4 && this.x < 604) {
-                console.log(this.x);
                 this.x--;
             } else {
-                console.log(this.x);
                 this.startPosition();
             }
         } else {
             if (this.x > -4 && this.x < 604) {
-                console.log(this.x);
                 this.x++;
             } else {
-                console.log(this.x);
                 this.startPosition();
             }
         }
