@@ -112,10 +112,10 @@ class myPlayer {
     updatePosition() {
         // Bewegung nach oben
         if(this.isUp && this.y > 0) {
-            this.y--;
+            this.y = this.y - 2;
         // Bewegung nach unten
         }else if(this.isDown && this.y < 450){
-            this.y++;
+            this.y = this.y + 2;
         }
         // Oberer Spielrand wird erreicht
         if(this.y <= 0){
@@ -198,25 +198,29 @@ class myObstacle {
     startPosition() {
         if (this.direction) {
             // Links
-            this.x = 0;
+            this.x = 603;
         } else {
             // Rechts
-            this.x = 600;
+            this.x = -3;
         }
     }
 
     // Verschieben der Position anhand der direction
     updatePosition() {
         if (this.direction) {
-            if (this.x > 0 && this.x < 600) {
+            if (this.x > -4 && this.x < 604) {
+                console.log(this.x);
                 this.x--;
             } else {
+                console.log(this.x);
                 this.startPosition();
             }
         } else {
-            if (this.x > 0 && this.x < 600) {
+            if (this.x > -4 && this.x < 604) {
+                console.log(this.x);
                 this.x++;
             } else {
+                console.log(this.x);
                 this.startPosition();
             }
         }
