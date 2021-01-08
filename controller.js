@@ -5,7 +5,10 @@ Modul 152, LB - Space Race
 
 // Variable für das Game Over Flag setzten
 var gameOver = false;
+// Variablen für die Geschwindigkeit der Hindernisse
 var speed = 1;
+// Initialisierung für die Angabe zum Level
+var difficultyLevel = 0;
 
 // Konstanten für die Angabe zur aktuellen Seite
 const pageOne = 1;
@@ -17,9 +20,6 @@ const easy = 1;
 const medium = 2;
 const difficult = 3;
 const none = 0;
-
-// Initialisierung für die Angabe zum Level
-var difficultyLevel = 0;
 
 // Ausführen der Startfunktion auf das fertige Laden der Seite
 window.onload = function() { startNewGame(); }
